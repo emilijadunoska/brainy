@@ -1,17 +1,42 @@
-import { StyleSheet, Text, View } from 'react-native';
-import ChatGPT from './src';
+import 'react-native-gesture-handler';
+import React from 'react';
+import {NavigationContainer} from '@react-navigation/native';
+import {createStackNavigator} from '@react-navigation/stack';
+import OnboardingScreen from './screens/OnboardingScreen';
+import HomeScreen from './screens/HomeScreen';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+const Stack = createStackNavigator();
 
-export default function App() {
+const App = () => {
+  const [isAppFirstLaunched, setIsAppFirstLaunched] = React.useState(null);
+
+  React.useEffect(async () => {
+    const appData = await AsyncStorage.getItem('isAppFirstLaunched');
+    if (appData == null) {
+      setIsAppFirstLaunched(true);
+      AsyncStorage.setItem('isAppFirstLaunched', 'true');
+    } else {
+      setIsAppFirstLaunched(true);
+    }
+
+    // AsyncStorage.removeItem('isAppFirstLaunched');
+  }, []);
+
   return (
-    <View style={styles.container}>
-      <ChatGPT/>
-    </View>
+    isAppFirstLaunched != null && (
+      <NavigationContainer>
+        <Stack.Navigator screenOptions={{headerShown: false}}>
+          {isAppFirstLaunched && (
+            <Stack.Screen
+              name="OnboardingScreen"
+              component={OnboardingScreen}
+            />
+          )}
+          <Stack.Screen name="HomeScreen" component={HomeScreen} />
+        </Stack.Navigator>
+      </NavigationContainer>
+    )
   );
-}
+};
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-   
-  },
-});
+export default App;

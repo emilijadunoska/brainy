@@ -2,7 +2,8 @@ import { View, Text, StyleSheet, FlatList, TextInput, TouchableOpacity } from 'r
 import React, { useState } from 'react'
 import axios, { Axios } from 'axios';
 
-const ChatGPT = () => {
+
+const HomeScreen = () => {
     const [data,setData]=useState([]);
     const apiKey = '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'
     const apiURL = 'https://api.openai.com/v1/engines/text-davinci-002/completions'
@@ -43,7 +44,7 @@ const ChatGPT = () => {
   )
 }
 
-export default ChatGPT
+export default HomeScreen;
 
 const styles = StyleSheet.create({
     
