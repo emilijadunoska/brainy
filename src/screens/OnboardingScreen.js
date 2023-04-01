@@ -18,20 +18,19 @@ const COLORS = {primary: '#282534', white: '#fff'};
 const slides = [
   {
     id: "1",
-    image: require("../src/images/image1.png"),
-    title: "A Safe space to share and heal",
+    image: require("../images/image1.png"),
+    title: "A safe space to share and heal",
     subtitle: "Your mental health journey begins here.",
   },
   {
     id: "2",
-    image: require("../src/images/image2.png"),
+    image: require("../images/image2.png"),
     title: "Take some time to travel within",
-    subtitle:
-      "Mental health is not a destination, but a process. Its about how you drive, not where youre going. Noam Shpancer",
+    subtitle: "Mental health is not a destination, but a journey!",
   },
   {
     id: "3",
-    image: require("../src/images/image3.png"),
+    image: require("../images/image3.png"),
     title: "A healthy mind is an asset",
     subtitle: "Chat your way to a better you!",
   },
@@ -41,14 +40,15 @@ const slides = [
 const Slide = ({item}) => {
   return (
     <View style={{alignItems: 'center'}}>
-      <Image
-        source={item?.image}
-        style={{height: '75%', width, resizeMode: 'contain'}}
+       <Image
+        source={item.image}
+        style={{height: '80%', width, resizeMode: 'contain'}}
       />
-      <View>
-        <Text style={styles.title}>{item?.title}</Text>
-        <Text style={styles.subtitle}>{item?.subtitle}</Text>
+      <View style={{alignItems: 'center'}}>
+        <Text style={styles.title}>{item.title}</Text>
+        <Text style={styles.subtitle}>{item.subtitle}</Text>
       </View>
+     
     </View>
   );
 };
@@ -56,6 +56,7 @@ const Slide = ({item}) => {
 const OnboardingScreen = ({navigation}) => {
   const [currentSlideIndex, setCurrentSlideIndex] = React.useState(0);
   const ref = React.useRef();
+  
   const updateCurrentSlideIndex = e => {
     const contentOffsetX = e.nativeEvent.contentOffset.x;
     const currentIndex = Math.round(contentOffsetX / width);
@@ -86,14 +87,12 @@ const OnboardingScreen = ({navigation}) => {
           justifyContent: 'space-between',
           paddingHorizontal: 20,
         }}>
-        {/* Indicator container */}
         <View
           style={{
             flexDirection: 'row',
             justifyContent: 'center',
             marginTop: 20,
           }}>
-          {/* Render indicator */}
           {slides.map((_, index) => (
             <View
               key={index}
@@ -107,8 +106,6 @@ const OnboardingScreen = ({navigation}) => {
             />
           ))}
         </View>
-
-        {/* Render buttons */}
         <View style={{marginBottom: 20}}>
           {currentSlideIndex == slides.length - 1 ? (
             <View style={{height: 50}}>
@@ -168,13 +165,14 @@ const OnboardingScreen = ({navigation}) => {
     <SafeAreaView style={{flex: 1, backgroundColor: COLORS.white}}>
       <StatusBar backgroundColor={COLORS.white} />
       <FlatList
+        pagingEnabled
         ref={ref}
         onMomentumScrollEnd={updateCurrentSlideIndex}
         contentContainerStyle={{height: height * 0.65}}
         showsHorizontalScrollIndicator={false}
         horizontal
         data={slides}
-        pagingEnabled
+       
         renderItem={({item}) => <Slide item={item} />}
       />
       <Footer />
@@ -185,7 +183,7 @@ const OnboardingScreen = ({navigation}) => {
 const styles = StyleSheet.create({
   subtitle: {
     color: COLORS.primary,
-    fontSize: 13,
+    fontSize: 14,
     marginTop: 10,
     maxWidth: '70%',
     textAlign: 'center',
@@ -193,7 +191,7 @@ const styles = StyleSheet.create({
   },
   title: {
     color: COLORS.primary,
-    fontSize: 22,
+    fontSize: 24,
     fontWeight: 'bold',
     marginTop: 20,
     textAlign: 'center',

@@ -2,15 +2,16 @@ import 'react-native-gesture-handler';
 import React from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
-import OnboardingScreen from './screens/OnboardingScreen';
-import HomeScreen from './screens/HomeScreen';
+import OnboardingScreen from './src/screens/OnboardingScreen';
+import HomeScreen from './src/screens/HomeScreen';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 const Stack = createStackNavigator();
 
 const App = () => {
   const [isAppFirstLaunched, setIsAppFirstLaunched] = React.useState(null);
 
-  React.useEffect(async () => {
+  React.useEffect(() => {
+    async function fetchData() {
     const appData = await AsyncStorage.getItem('isAppFirstLaunched');
     if (appData == null) {
       setIsAppFirstLaunched(true);
@@ -18,8 +19,8 @@ const App = () => {
     } else {
       setIsAppFirstLaunched(true);
     }
-
-    // AsyncStorage.removeItem('isAppFirstLaunched');
+  }
+  fetchData();
   }, []);
 
   return (
