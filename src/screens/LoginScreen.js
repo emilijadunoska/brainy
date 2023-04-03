@@ -1,4 +1,5 @@
 import React, { useEffect } from "react";
+import  { useState } from 'react';
 import {
   SafeAreaView,
   View,
@@ -14,10 +15,31 @@ import Colors from "../constants/Colors";
 import FontSize from "../constants/FontSize";
 import Spacing from "../constants/Spacing";
 import AppTextInput from "../../components/AppTextInput";
+import { auth } from "../../firebase";
 
 const { width, height } = Dimensions.get("window");
 
 const Login = ({ navigation }) => {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  
+  useEffect(() => {
+   const unsubscribe =  auth.onAuthStateChanged( user => {
+      if (user) {
+        navigation.navigate("ChatScreen")
+      }
+    })
+    return unsubscribe
+  },[])
+ 
+  const handleLogin = () => {
+    auth.signInWithEmailAndPassword(email, password)
+    .then(userCredentials => {
+      const user = userCredentials.user;
+      console.log(user.email)
+    })
+    .catch(err => { alert(err.message)})
+  }
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: Colors.white }}>
       <StatusBar backgroundColor={Colors.white} />
@@ -44,9 +66,9 @@ const Login = ({ navigation }) => {
           </Text>
         </View>
         <View style={{ marginVertical: Spacing * 3 }}>
-          <AppTextInput placeholder="Email"></AppTextInput>
+          <AppTextInput placeholder="Email" value={email} onChangeText={text => setEmail(text)}></AppTextInput>
 
-          <AppTextInput placeholder="Password" secureTextEntry></AppTextInput>
+          <AppTextInput placeholder="Password" value={password} onChangeText={text => setPassword(text)} secureTextEntry></AppTextInput>
         </View>
 
         <View>
@@ -62,6 +84,7 @@ const Login = ({ navigation }) => {
           </Text>
         </View>
         <TouchableOpacity
+        onPress={handleLogin}
           style={{
             padding: Spacing * 2,
             backgroundColor: Colors.primary,
@@ -75,7 +98,7 @@ const Login = ({ navigation }) => {
             shadowOpacity: 0.1,
             shadowRadius: Spacing,
           }}
-          onPress={() => navigation.navigate("ChatScreen")}
+          
         >
           <Text
             style={{
