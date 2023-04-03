@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   SafeAreaView,
   View,
@@ -13,11 +13,26 @@ import Colors from "../constants/Colors";
 import FontSize from "../constants/FontSize";
 import Spacing from "../constants/Spacing";
 import AppTextInput from '../../components/AppTextInput';
-
+import { auth } from '../../firebase';
 const {width, height} = Dimensions.get('window');
 
 
+
+
 const Register = ({navigation}) => {
+
+  const [email,setEmail] = useState('');
+  const [password,setPassword] = useState ('');
+  const handleRegister = () => {
+    auth.createUserWithEmailAndPassword(email, password)
+    .then(userCredentials => {
+      const user = userCredentials.user;
+      console.log(user.email)
+      navigation.navigate("LoginScreen")
+    })
+    .catch(err => { alert(err.message)})
+  }
+
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: Colors.white }}>
     <StatusBar backgroundColor={Colors.white} />
@@ -40,10 +55,12 @@ const Register = ({navigation}) => {
         </Text>
       </View>
       <View style={{ marginVertical: Spacing * 3 }}>
-        <AppTextInput placeholder='Email'/>
+        <AppTextInput placeholder='Email' value={email} onChangeText= {text => setEmail(text)}/>
 
         <AppTextInput
           placeholder="Password"
+          value={password}
+          onChangeText={text => setPassword(text)}
           secureTextEntry
         ></AppTextInput>
          <AppTextInput
@@ -66,7 +83,7 @@ const Register = ({navigation}) => {
           shadowOpacity: 0.1,
           shadowRadius: Spacing,
         }}
-        onPress={() => navigation.navigate('ChatScreen')}
+        onPress={handleRegister}
       >
         <Text style={{ color: Colors.onPrimary, textAlign: "center", fontSize: FontSize.large }}>
           Register
@@ -77,7 +94,7 @@ const Register = ({navigation}) => {
         style={{
           padding: Spacing * 3,
         }}
-        onPress={() => navigation.navigate('LoginScreen')}
+        onPress={handleRegister}
       >
         <Text style={{ color: Colors.black, textAlign: "center", fontSize: FontSize.small }}>
           Already have an account? 
