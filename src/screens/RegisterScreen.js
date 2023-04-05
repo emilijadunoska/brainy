@@ -16,9 +16,6 @@ import AppTextInput from '../../components/AppTextInput';
 import { auth } from '../../firebase';
 const {width, height} = Dimensions.get('window');
 
-
-
-
 const Register = ({navigation}) => {
 
   const [email,setEmail] = useState('');

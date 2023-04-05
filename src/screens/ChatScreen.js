@@ -20,11 +20,12 @@ const { width, height } = Dimensions.get("window");
 
 const HomeScreen = () => {
   const [data, setData] = useState([]);
-  const apiKey = "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";
+  const apiKey = "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";
   const apiURL =
     "https://api.openai.com/v1/engines/text-davinci-002/completions";
-  const [textInput, setTextInput] = useState("");
+  const [textInput, setTextInput] = useState('');
 
+/*
   const handleSend = async () => {
     const prompt = textInput;
     const response = await axios.post(
@@ -32,20 +33,74 @@ const HomeScreen = () => {
       { prompt, max_tokens: 1024, temperature: 0.5 },
       {
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
           Authorization: `Bearer ${apiKey}`,
         },
       }
-    );
+    )
+*/
+    /* .then(function(response) {
+  if (response.status !== 200) {
+    console.log('Error Status Code: ' + response.status);
+    // you might want to `throw` here
+  } else {
+    return response.json().then(function(data) {
+      console.log(data);
+      return data.data;
+    })
+  }
+}); */
 
+
+const handleSend = async () => {
+  const prompt = textInput;
+  let response;
+  let retries = 0;
+
+  while (retries < 10) { // maximum number of retries
+    try {
+      response = await axios.post(
+        apiURL,
+        { prompt, max_tokens: 1024, temperature: 0.5 },
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${apiKey}`,
+          },
+        }
+      );
+      break; // exit the loop if the request succeeds
+    } catch (error) {
+      if (error.response.status === 429) { // check if the error is a 429 error
+        console.log(`Rate limit exceeded. Retrying in ${error.response.headers['retry-after']} seconds.`);
+        retries++;
+        await new Promise(resolve => setTimeout(resolve, error.response.headers['retry-after'] * 1000)); // wait for the retry-after time
+      } else {
+        console.error(error);
+        break;
+      }
+    }
+  }
+
+  if (response) {
+    const text = response.data.choices[0].text;
+    setData([...data, { type: "user", text: textInput }, { type: "bot", text: text }]);
+    setTextInput("");
+  };
+
+};
+
+
+/*
     const text = response.data.choices[0].text;
     setData([
       ...data,
       { type: "user", text: textInput },
       { type: "bot", text: text },
     ]);
-    setTextInput("");
-  };
+    setTextInput('');
+  }; */
+
   return (
     <SafeAreaView style={styles.container}>
       <Text style={styles.title}>Brainy</Text>
@@ -58,11 +113,11 @@ const HomeScreen = () => {
             <Text
               style={{
                 fontWeight: "bold",
-                color: item.type === "user" ? "green" : "red",
+                color: item.type === 'user' ? "green" : "red",
                 padding: Spacing
               }}
             >
-              {item.type === "user" ? "User" : "Brainy"}
+              {item.type === "user" ? 'Ninza' : "Brainy"}
             </Text>
             <Text style={styles.bot}>{item.text}</Text>
           </View>
@@ -73,7 +128,7 @@ const HomeScreen = () => {
           behavior={Platform.OS === "ios" ? "padding" : "height"}
           style={{flexDirection: 'row'}}
         >
-          <AppTextInput
+          <AppTextInput  
             value={textInput}
             onChangeText={(text) => setTextInput(text)}
             placeholder="Ask me anything"
