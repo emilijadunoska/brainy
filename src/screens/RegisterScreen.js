@@ -5,7 +5,8 @@ import {
   Text,
   TouchableOpacity,
   Dimensions,
-  StatusBar
+  StatusBar,
+  Alert
 } from 'react-native';
 import { TextInput } from "react-native-gesture-handler";
 import { Ionicons } from "@expo/vector-icons";
@@ -13,38 +14,28 @@ import Colors from "../constants/Colors";
 import FontSize from "../constants/FontSize";
 import Spacing from "../constants/Spacing";
 import AppTextInput from '../../components/AppTextInput';
-import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth';
+import { auth } from '../../firebase';
 const {width, height} = Dimensions.get('window');
 
-const auth = getAuth();
-const Register = ({navigation}) => {
-
-  const [email,setEmail] = useState('');
-  const [password,setPassword] = useState ('');
+const Register = ({ navigation }) => {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
-  const [validationMessage, setValidationMessage] = useState('');
-  
-  let validateAndSet = (value,setValue) => {
-    setValue(value)
- }
 
- function checkPassword(firstpassword,secondpassword) {
-  if(firstpassword !== secondpassword){
-    setValidationMessage('Password do not match') 
-  }
-  else setValidationMessage('')
-}
-  async function createAccount() {
-    email === '' || password === '' 
-    ? setValidationMessage('required filled missing')
-    : ''
-    try {
-      await createUserWithEmailAndPassword(auth, email, password);
-      navigation.navigate('LoginScreen');
-    } catch (error) {
-      setValidationMessage(error.message);
+  const handleRegister = async () => {
+    if (password !== confirmPassword) {
+      Alert.alert('Error', 'Passwords do not match');
+      return;
     }
-  }
+    
+    auth.createUserWithEmailAndPassword(email, password)
+    .then(userCredentials => {
+      const user = userCredentials.user;
+      console.log(user.email)
+      navigation.navigate("LoginScreen")
+    })
+    .catch(err => { alert(err.message)})
+  };
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: Colors.white }}>
@@ -72,18 +63,14 @@ const Register = ({navigation}) => {
 
         <AppTextInput
           placeholder="Password"
-          value={password}
-          onChangeText={(value) => validateAndSet(value, setPassword)}
+          value={password} onChangeText={setPassword} 
           secureTextEntry
         ></AppTextInput>
          <AppTextInput
           placeholder="Confirm Password"
-          value={confirmPassword}
-          onChangeText={(value) => validateAndSet(value,setConfirmPassword)}
+          value={confirmPassword} onChangeText={setConfirmPassword}
           secureTextEntry
-          onBlur={()=>checkPassword(password,confirmPassword)}
         ></AppTextInput> 
-        {<Text style={styles.error}>{validationMessage}</Text>}
       </View>
 
       <TouchableOpacity
@@ -100,7 +87,7 @@ const Register = ({navigation}) => {
           shadowOpacity: 0.1,
           shadowRadius: Spacing,
         }}
-        onPress={createAccount}
+        onPress={handleRegister}
       >
         <Text style={{ color: Colors.onPrimary, textAlign: "center", fontSize: FontSize.large }}>
           Register
@@ -111,7 +98,7 @@ const Register = ({navigation}) => {
         style={{
           padding: Spacing * 3,
         }}
-        onPress={createAccount}
+        onPress={handleRegister}
       >
         <Text style={{ color: Colors.black, textAlign: "center", fontSize: FontSize.small }}>
           Already have an account? 
