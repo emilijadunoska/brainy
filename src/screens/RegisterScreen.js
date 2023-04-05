@@ -13,21 +13,37 @@ import Colors from "../constants/Colors";
 import FontSize from "../constants/FontSize";
 import Spacing from "../constants/Spacing";
 import AppTextInput from '../../components/AppTextInput';
-import { auth } from '../../firebase';
+import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth';
 const {width, height} = Dimensions.get('window');
 
+const auth = getAuth();
 const Register = ({navigation}) => {
 
   const [email,setEmail] = useState('');
   const [password,setPassword] = useState ('');
-  const handleRegister = () => {
-    auth.createUserWithEmailAndPassword(email, password)
-    .then(userCredentials => {
-      const user = userCredentials.user;
-      console.log(user.email)
-      navigation.navigate("LoginScreen")
-    })
-    .catch(err => { alert(err.message)})
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [validationMessage, setValidationMessage] = useState('');
+  
+  let validateAndSet = (value,setValue) => {
+    setValue(value)
+ }
+
+ function checkPassword(firstpassword,secondpassword) {
+  if(firstpassword !== secondpassword){
+    setValidationMessage('Password do not match') 
+  }
+  else setValidationMessage('')
+}
+  async function createAccount() {
+    email === '' || password === '' 
+    ? setValidationMessage('required filled missing')
+    : ''
+    try {
+      await createUserWithEmailAndPassword(auth, email, password);
+      navigation.navigate('LoginScreen');
+    } catch (error) {
+      setValidationMessage(error.message);
+    }
   }
 
   return (
@@ -57,13 +73,17 @@ const Register = ({navigation}) => {
         <AppTextInput
           placeholder="Password"
           value={password}
-          onChangeText={text => setPassword(text)}
+          onChangeText={(value) => validateAndSet(value, setPassword)}
           secureTextEntry
         ></AppTextInput>
          <AppTextInput
           placeholder="Confirm Password"
+          value={confirmPassword}
+          onChangeText={(value) => validateAndSet(value,setConfirmPassword)}
           secureTextEntry
-        ></AppTextInput>
+          onBlur={()=>checkPassword(password,confirmPassword)}
+        ></AppTextInput> 
+        {<Text style={styles.error}>{validationMessage}</Text>}
       </View>
 
       <TouchableOpacity
@@ -80,7 +100,7 @@ const Register = ({navigation}) => {
           shadowOpacity: 0.1,
           shadowRadius: Spacing,
         }}
-        onPress={handleRegister}
+        onPress={createAccount}
       >
         <Text style={{ color: Colors.onPrimary, textAlign: "center", fontSize: FontSize.large }}>
           Register
@@ -91,7 +111,7 @@ const Register = ({navigation}) => {
         style={{
           padding: Spacing * 3,
         }}
-        onPress={handleRegister}
+        onPress={createAccount}
       >
         <Text style={{ color: Colors.black, textAlign: "center", fontSize: FontSize.small }}>
           Already have an account? 
