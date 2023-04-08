@@ -14,7 +14,8 @@ import Colors from "../constants/Colors";
 import FontSize from "../constants/FontSize";
 import Spacing from "../constants/Spacing";
 import AppTextInput from '../../components/AppTextInput';
-import { auth } from '../../firebase';
+import { auth , database } from '../../firebase';
+import {  ref, set } from "firebase/database";
 const {width, height} = Dimensions.get('window');
 
 const Register = ({ navigation }) => {
@@ -27,15 +28,51 @@ const Register = ({ navigation }) => {
       Alert.alert('Error', 'Passwords do not match');
       return;
     }
+
+    try {
+   
+      const { user } = await auth.createUserWithEmailAndPassword(email, password);
+
+      if (!user) {
+        throw new Error('Failed to create user');
+      }
+      // Save the user's authentication data to the Realtime Database
+      await database.ref(`users/${user.uid}`).set({
+        uid: user.uid,
+        email: user.email,
+        password: password
+      });
+      navigation.navigate('LoginScreen');
+    } catch (error) {
+      Alert.alert('Error', error.message);
+    }
+  };
     
+
+   /*  
+   
+   set(ref(database , 'user/'+ email )),{
+        id: userId,
+        email: email,
+        password: password
+      }
+
+*/
+  /* 
     auth.createUserWithEmailAndPassword(email, password)
     .then(userCredentials => {
       const user = userCredentials.user;
       console.log(user.email)
-      navigation.navigate("LoginScreen")
+      const userId = auth.currentUser.uid;
+     // const db = database.set(ref(db, 'users/' + userId), {
+     //   email: user.email,
+      //  password: user.password
+  //  }); 
+      navigation.navigate("LoginScreen")          
     })
     .catch(err => { alert(err.message)})
   };
+  */
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: Colors.white }}>
@@ -87,7 +124,7 @@ const Register = ({ navigation }) => {
           shadowOpacity: 0.1,
           shadowRadius: Spacing,
         }}
-        onPress={handleRegister}
+       onPress={handleRegister}
       >
         <Text style={{ color: Colors.onPrimary, textAlign: "center", fontSize: FontSize.large }}>
           Register
