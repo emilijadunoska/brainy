@@ -5,7 +5,8 @@ import {
   Text,
   TouchableOpacity,
   Dimensions,
-  StatusBar
+  StatusBar,
+  Alert
 } from 'react-native';
 import { TextInput } from "react-native-gesture-handler";
 import { Ionicons } from "@expo/vector-icons";
@@ -13,25 +14,81 @@ import Colors from "../constants/Colors";
 import FontSize from "../constants/FontSize";
 import Spacing from "../constants/Spacing";
 import AppTextInput from '../../components/AppTextInput';
-import { auth } from '../../firebase';
+import { auth , database } from '../../firebase';
+import {  getDatabase, ref, set } from "firebase/database";
 const {width, height} = Dimensions.get('window');
 
+const Register = ({ navigation }) => {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
 
+  const handleRegister = async () => {
+  
+      if (password !== confirmPassword) {
+        Alert.alert('Error', 'Passwords do not match');
+        return;
+      }
+      
+    auth.createUserWithEmailAndPassword(email, password)
+      .then(userCredentials => {
+        const user = userCredentials.user;
+        const email = user.email;
+        const uid = user.uid;
+        db= getDatabase();
+        set(ref(db, 'users/' + uid), {
+          email: email,
+          password: password
+        })
+        navigation.navigate("LoginScreen")
+      }).then((data)=>{
+        //success callback
+        console.log('data ' , data)
+    })
+      .catch(err => { alert(err.message)})
 
+  };
+    
 
-const Register = ({navigation}) => {
+   /*  
+   
+   const handleRegister = () => {
+    if (password !== confirmPassword) {
+      Alert.alert('Error', 'Passwords do not match');
+      return;
+    }
+    
+  auth.createUserWithEmailAndPassword(email, password)
+    .then(userCredentials => {
+      const user = userCredentials.user;
+      const email = user.email;
+      const uid = user.uid;
+      const userRef = database().ref(`users/${uid}`);
+      userRef.set({
+        email: email,
+        password: password
+      })
+      navigation.navigate("LoginScreen")
+    })
+    .catch(err => { alert(err.message)})
+}
 
-  const [email,setEmail] = useState('');
-  const [password,setPassword] = useState ('');
-  const handleRegister = () => {
+*/
+  /* 
     auth.createUserWithEmailAndPassword(email, password)
     .then(userCredentials => {
       const user = userCredentials.user;
       console.log(user.email)
-      navigation.navigate("LoginScreen")
+      const userId = auth.currentUser.uid;
+     // const db = database.set(ref(db, 'users/' + userId), {
+     //   email: user.email,
+      //  password: user.password
+  //  }); 
+      navigation.navigate("LoginScreen")          
     })
     .catch(err => { alert(err.message)})
-  }
+  };
+  */
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: Colors.white }}>
@@ -59,14 +116,14 @@ const Register = ({navigation}) => {
 
         <AppTextInput
           placeholder="Password"
-          value={password}
-          onChangeText={text => setPassword(text)}
+          value={password} onChangeText={setPassword} 
           secureTextEntry
         ></AppTextInput>
          <AppTextInput
           placeholder="Confirm Password"
+          value={confirmPassword} onChangeText={setConfirmPassword}
           secureTextEntry
-        ></AppTextInput>
+        ></AppTextInput> 
       </View>
 
       <TouchableOpacity
@@ -83,7 +140,7 @@ const Register = ({navigation}) => {
           shadowOpacity: 0.1,
           shadowRadius: Spacing,
         }}
-        onPress={handleRegister}
+       onPress={handleRegister}
       >
         <Text style={{ color: Colors.onPrimary, textAlign: "center", fontSize: FontSize.large }}>
           Register
