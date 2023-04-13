@@ -15,7 +15,7 @@ import FontSize from "../constants/FontSize";
 import Spacing from "../constants/Spacing";
 import AppTextInput from '../../components/AppTextInput';
 import { auth , database } from '../../firebase';
-import {  ref, set } from "firebase/database";
+import {  getDatabase, ref, set } from "firebase/database";
 const {width, height} = Dimensions.get('window');
 
 const Register = ({ navigation }) => {
@@ -24,38 +24,54 @@ const Register = ({ navigation }) => {
   const [confirmPassword, setConfirmPassword] = useState('');
 
   const handleRegister = async () => {
-    if (password !== confirmPassword) {
-      Alert.alert('Error', 'Passwords do not match');
-      return;
-    }
-
-    try {
-   
-      const { user } = await auth.createUserWithEmailAndPassword(email, password);
-
-      if (!user) {
-        throw new Error('Failed to create user');
+  
+      if (password !== confirmPassword) {
+        Alert.alert('Error', 'Passwords do not match');
+        return;
       }
-      // Save the user's authentication data to the Realtime Database
-      await database.ref(`users/${user.uid}`).set({
-        uid: user.uid,
-        email: user.email,
-        password: password
-      });
-      navigation.navigate('LoginScreen');
-    } catch (error) {
-      Alert.alert('Error', error.message);
-    }
+      
+    auth.createUserWithEmailAndPassword(email, password)
+      .then(userCredentials => {
+        const user = userCredentials.user;
+        const email = user.email;
+        const uid = user.uid;
+        db= getDatabase();
+        set(ref(db, 'users/' + uid), {
+          email: email,
+          password: password
+        })
+        navigation.navigate("LoginScreen")
+      }).then((data)=>{
+        //success callback
+        console.log('data ' , data)
+    })
+      .catch(err => { alert(err.message)})
+
   };
     
 
    /*  
    
-   set(ref(database , 'user/'+ email )),{
-        id: userId,
+   const handleRegister = () => {
+    if (password !== confirmPassword) {
+      Alert.alert('Error', 'Passwords do not match');
+      return;
+    }
+    
+  auth.createUserWithEmailAndPassword(email, password)
+    .then(userCredentials => {
+      const user = userCredentials.user;
+      const email = user.email;
+      const uid = user.uid;
+      const userRef = database().ref(`users/${uid}`);
+      userRef.set({
         email: email,
         password: password
-      }
+      })
+      navigation.navigate("LoginScreen")
+    })
+    .catch(err => { alert(err.message)})
+}
 
 */
   /* 
