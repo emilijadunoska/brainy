@@ -25,37 +25,20 @@ const HomeScreen = () => {
     "https://api.openai.com/v1/engines/text-davinci-002/completions";
   const [textInput, setTextInput] = useState('');
 
-/*
-  const handleSend = async () => {
-    const prompt = textInput;
-    const response = await axios.post(
-      apiURL,
-      { prompt, max_tokens: 1024, temperature: 0.5 },
-      {
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${apiKey}`,
-        },
-      }
-    )
-*/
-    /* .then(function(response) {
-  if (response.status !== 200) {
-    console.log('Error Status Code: ' + response.status);
-    // you might want to `throw` here
-  } else {
-    return response.json().then(function(data) {
-      console.log(data);
-      return data.data;
-    })
-  }
-}); */
-
-
 const handleSend = async () => {
-  const prompt = textInput;
+  const promptPrefix =
+  " Hello! I'm here to listen and help you work through any issues or concerns you may have. What's on your mind today? Are you struggling with any particular emotions or thoughts? Don't be afraid to open up - I'm here to provide a safe and supportive space for you to explore your feelings and find solutions. Remember, you're not alone. \n\nUser:"; 
+
+  /*const promptPrefix = `As a psychologist/therapist, I am here to provide a supportive and non-judgmental environment for discussing your thoughts, emotions, and concerns. I will help you explore your feelings, identify patterns, and work towards solutions. Remember, our conversation is confidential, and you can feel safe sharing your experiences with me. I'm here to listen and help you work through any issues or concerns you may have. What's on your mind today? Are you struggling with any particular emotions or thoughts? Don't be afraid to open up- Remember, you're not alone. I will provide you my thoughts. I want you to give me scientific suggestions that will make me feel better.
+Please describe any issues or emotions you'd like to discuss today:
+
+User: `; */
+
+  const prompt = promptPrefix + textInput;
+
   let response;
   let retries = 0;
+
 
   while (retries < 10) { // maximum number of retries
     try {
@@ -81,15 +64,12 @@ const handleSend = async () => {
       }
     }
   }
-
   if (response) {
     const text = response.data.choices[0].text;
     setData([...data, { type: "user", text: textInput }, { type: "bot", text: text }]);
     setTextInput("");
   };
-
 };
-
 
 /*
     const text = response.data.choices[0].text;
@@ -117,7 +97,7 @@ const handleSend = async () => {
                 padding: Spacing
               }}
             >
-              {item.type === "user" ? 'Ninza' : "Brainy"}
+              {item.type === "user" ? 'User' : "Brainy"}
             </Text>
             <Text style={styles.bot}>{item.text}</Text>
           </View>
