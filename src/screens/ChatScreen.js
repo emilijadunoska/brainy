@@ -20,7 +20,7 @@ const { width, height } = Dimensions.get("window");
 
 const HomeScreen = () => {
   const [data, setData] = useState([]);
-  const apiKey = "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";
+  const apiKey = "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";
   const apiURL =
     "https://api.openai.com/v1/engines/text-davinci-002/completions";
   const [textInput, setTextInput] = useState('');
@@ -42,7 +42,7 @@ User: `; */
 
   while (retries < 10) { // maximum number of retries
     try {
-      response = await axios.post(
+      /*response = await axios.post(
         apiURL,
         { prompt, max_tokens: 1024, temperature: 0.5 },
         {
@@ -51,7 +51,33 @@ User: `; */
             Authorization: `Bearer ${apiKey}`,
           },
         }
-      );
+      );*/
+      const systemMessage = {
+        role: "system",
+        content: "Act like a psychologist/therapist and try to help the user with his mental health problems."
+      }
+      const userMessage = {
+        role: "user",
+        content: textInput
+      }
+      const apiRequestBody = {
+        "model": "gpt-3.5-turbo",
+        "messages": [userMessage,systemMessage]
+      }
+      response = await fetch("https://api.openai.com/v1/chat/completions",{
+          method : "POST",
+          headers : {
+            "Authorization": "Bearer " + apiKey,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(apiRequestBody)
+      }).then((data) => {
+        return data.json();
+      }).then((data) => {
+        console.log(data.choices[0].message.content)
+        return data.choices[0].message.content
+      })
+
       break; // exit the loop if the request succeeds
     } catch (error) {
       if (error.response.status === 429) { // check if the error is a 429 error
