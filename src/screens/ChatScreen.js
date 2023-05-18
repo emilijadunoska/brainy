@@ -1,216 +1,139 @@
 import {
   View,
-  Text,
   StyleSheet,
-  FlatList,
-  TextInput,
-  TouchableOpacity,
-  KeyboardAvoidingView,
   Dimensions,
-  SafeAreaView
+  SafeAreaView,
+  ScrollView,
+  Text,
 } from "react-native";
-import React, { useState } from "react";
-import axios, { Axios } from "axios";
+import React, { useState, useEffect, useCallback } from "react";
+//import axios, { Axios } from "axios";
 import Colors from "../constants/Colors";
 import FontSize from "../constants/FontSize";
 import Spacing from "../constants/Spacing";
 import AppTextInput from "../../components/AppTextInput";
+import { Bubble, GiftedChat, Send } from "react-native-gifted-chat";
+import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
+import { v4 as messageIdGenerator } from "uuid";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 const { width, height } = Dimensions.get("window");
 
-const HomeScreen = () => {
-  const [data, setData] = useState([]);
+export default function ChatScreen() {
+  const [messages, setMessages] = useState([]);
+  const { bottom } = useSafeAreaInsets();
+
   const apiKey = "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";
-  const apiURL =
-    "https://api.openai.com/v1/engines/text-davinci-002/completions";
-  const [textInput, setTextInput] = useState('');
+  const apiURL = "https://api.openai.com/v1/chat/completions";
+  const logo = "https://upload.wikimedia.org/wikipedia/commons/thumb/0/04/ChatGPT_logo.svg/640px-ChatGPT_logo.svg.png";
 
-const handleSend = async () => {
-  const promptPrefix =
-  " Hello! I'm here to listen and help you work through any issues or concerns you may have. What's on your mind today? Are you struggling with any particular emotions or thoughts? Don't be afraid to open up - I'm here to provide a safe and supportive space for you to explore your feelings and find solutions. Remember, you're not alone. \n\nUser:"; 
+  useEffect(() => {
+    firstMessage();
+  }, []);
 
-  /*const promptPrefix = `As a psychologist/therapist, I am here to provide a supportive and non-judgmental environment for discussing your thoughts, emotions, and concerns. I will help you explore your feelings, identify patterns, and work towards solutions. Remember, our conversation is confidential, and you can feel safe sharing your experiences with me. I'm here to listen and help you work through any issues or concerns you may have. What's on your mind today? Are you struggling with any particular emotions or thoughts? Don't be afraid to open up- Remember, you're not alone. I will provide you my thoughts. I want you to give me scientific suggestions that will make me feel better.
-Please describe any issues or emotions you'd like to discuss today:
-
-User: `; */
-
-  const prompt = promptPrefix + textInput;
-
-  let response;
-  let retries = 0;
-
-
-  while (retries < 10) { // maximum number of retries
-    try {
-      /*response = await axios.post(
-        apiURL,
-        { prompt, max_tokens: 1024, temperature: 0.5 },
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${apiKey}`,
-          },
-        }
-      );*/
-      const systemMessage = {
-        role: "system",
-        content: "Act like a psychologist/therapist and try to help the user with his mental health problems."
-      }
-      const userMessage = {
-        role: "user",
-        content: textInput
-      }
-      const apiRequestBody = {
-        "model": "gpt-3.5-turbo",
-        "messages": [userMessage,systemMessage]
-      }
-      await fetch("https://api.openai.com/v1/chat/completions",{
-          method : "POST",
-          headers : {
-            "Authorization": "Bearer " + apiKey,
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(apiRequestBody)
-      }).then((dataResponse) => {
-        return dataResponse.json();
-      }).then((dataResponse) => {
-        console.log(dataResponse.choices[0].message.content)
-        setData([...data, { type: "user", text: textInput }, { type: "bot", text: dataResponse.choices[0].message.content }]);
-        setTextInput("");
-        
-      })
-
-      break; // exit the loop if the request succeeds
-    } catch (error) {
-      if (error.response.status === 429) { // check if the error is a 429 error
-        console.log(`Rate limit exceeded. Retrying in ${error.response.headers['retry-after']} seconds.`);
-        retries++;
-        await new Promise(resolve => setTimeout(resolve, error.response.headers['retry-after'] * 1000)); // wait for the retry-after time
-      } else {
-        console.error(error);
-        break;
-      }
-    }
-  }
- /* if (response) {
-    const text = response.data.choices[0].text;
-    setData([...data, { type: "user", text: textInput }, { type: "bot", text: text }]);
-    setTextInput("");
-  };*/
-};
-
-/*
-    const text = response.data.choices[0].text;
-    setData([
-      ...data,
-      { type: "user", text: textInput },
-      { type: "bot", text: text },
+  const firstMessage = () => {
+    setMessages([
+      {
+        _id: 1,
+        text: "Hello, how are you today?",
+        createdAt: new Date(),
+        user: {
+          _id: 2,
+          name: "Chatbot GPT",
+          avatar: logo,
+        },
+      },
     ]);
-    setTextInput('');
-  }; */
+  };
+
+  const onSend = useCallback((message = []) => {
+    setMessages((previousMessages) =>
+      GiftedChat.append(previousMessages, message)
+    );
+    const value = message[0]?.text;
+    callApi(value);
+  }, []);
+
+  const callApi = async (value) => {
+    const prompt = `Act like a psychologist/therapist and try to help the user with their mental health problems.\n\nUser: ${value}`;
+
+    const apiRequestBody = {
+      model: "gpt-3.5-turbo",
+      messages: [
+        { role: 'system', content: prompt },
+        { role: 'user', content: value },
+      ],
+      max_tokens: 1024,
+      temperature: 0,
+    };
+
+    try {
+      const res = await fetch(apiURL, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${apiKey}`,
+        },
+        body: JSON.stringify(apiRequestBody),
+      });
+
+      const data = await res.json();
+      console.log("API Response:", data); // Log the response to check the structure and content
+
+      if (data.choices && data.choices.length > 0 && data.choices[0]?.message?.content) {
+        const response = data.choices[0].message.content;
+        addNewMessage(response);
+      }
+    } catch (error) {
+      console.error("API Error:", error);
+    }
+  };
+
+  const addNewMessage = (data) => {
+    const newMessage = {
+      _id: Math.random().toString(), // Generate a unique ID for the message
+      text: data,
+      createdAt: new Date(),
+      user: {
+        _id: 2,
+        name: "Chatbot GPT",
+        avatar: logo,
+      },
+    };
+
+    setMessages((previousMessages) =>
+      GiftedChat.append(previousMessages, [newMessage])
+    );
+  };
 
   return (
-    <SafeAreaView style={styles.container}>
-      <Text style={styles.title}>Brainy</Text>
-      <FlatList
-        data={data}
-        keyExtractor={(item, index) => index.toString()}
-        style={styles.body}
-        renderItem={({ item }) => (
-          <View style={{ flexDirection: "row", padding: 10 }}>
-            <Text
-              style={{
-                fontWeight: "bold",
-                color: item.type === 'user' ? "green" : "red",
-                padding: Spacing
-              }}
-            >
-              {item.type === "user" ? 'User' : "Brainy"}
-            </Text>
-            <Text style={styles.bot}>{item.text}</Text>
-          </View>
-        )}
+    <View style={{ flex: 1, paddingBottom: bottom }}>
+      <GiftedChat
+        messages={messages}
+        onSend={onSend}
+        user={{
+          _id: 1,
+        }}
+        alwaysShowSend
+        scrollToBottom
       />
-      
-        <KeyboardAvoidingView 
-          behavior={Platform.OS === "ios" ? "padding" : "height"}
-          style={{flexDirection: 'row'}}
-        >
-          <AppTextInput  
-            value={textInput}
-            onChangeText={(text) => setTextInput(text)}
-            placeholder="Ask me anything"
-            style={{fontSize: FontSize.medium, padding: Spacing * 5}}
-            
-          />
-          <TouchableOpacity style={styles.button} onPress={handleSend}>
-            <Text
-              style={{
-                color: Colors.onPrimary,
-                fontWeight: "bold",
-                textAlign: "center",
-                fontSize: FontSize.medium,
-                
-              }}
-            >
-              Send Message
-            </Text>
-          </TouchableOpacity>
-        </KeyboardAvoidingView>
-      
-    </SafeAreaView>
+    </View>
   );
-};
-
-export default HomeScreen;
+}
 
 const styles = StyleSheet.create({
-  title: {
-    fontWeight: "bold",
-    fontSize: 28,
-    marginBottom: 20,
-    marginTop: 70,
-  },
   container: {
     flex: 1,
-    backgroundColor: Colors.white,
-    alignItems: "center",
   },
-  body: {
-    backgroundColor: Colors.white,
-    
-    margin: 10,
+  txtView: {
+    borderBottomColor: "#EAEBE8",
+    borderBottomWidth: 0.5,
+    backgroundColor: "fff",
   },
-  bot: {
-    fontSize: 16,
-    padding: Spacing
-  },
-  input: {
-    borderWidth: 1,
-    borderColor: "black",
-    width: "90%",
-    height: 60,
-    marginBottom: 10,
-    borderRadius: 10,
-  },
-  button: {
-   
-    padding: Spacing * 2,
-    backgroundColor: Colors.primary,
-    marginVertical: Spacing * 3,
-    borderRadius: Spacing,
-    shadowColor: Colors.primary,
-    shadowOffset: {
-      width: 0,
-      height: Spacing,
-    },
-    shadowOpacity: 0.1,
-    shadowRadius: Spacing,
-  },
-
-  buttonText: {
-    fontSize: 20,
-    fontWeight: "bold",
-    color: Colors.primary,
+  txt: { alignSelf: "flex-end", padding: 10 },
+  chatContainer: {
+    backgroundColor: "#fff",
+    borderBottomColor: "#D3D3D3",
+    borderBottomWidth: 1,
   },
 });

@@ -20,9 +20,9 @@ const App = () => {
     const appData = await AsyncStorage.getItem('isAppFirstLaunched');
     if (appData == null) {
       setIsAppFirstLaunched(true);
-      AsyncStorage.setItem('isAppFirstLaunched', 'true');
+      AsyncStorage.setItem('isAppFirstLaunched', 'false');
     } else {
-      setIsAppFirstLaunched(true);
+      setIsAppFirstLaunched(false);
     }
   }
   fetchData();
@@ -31,17 +31,17 @@ const App = () => {
   return (
     isAppFirstLaunched != null && (
       <NavigationContainer>
-        <Stack.Navigator screenOptions={{headerShown: false}}>
+        <Stack.Navigator screenOptions={{headerShown: true}}>
           {isAppFirstLaunched && (
             <Stack.Screen
               name="OnboardingScreen"
               component={OnboardingScreen}
             />
           )}
-          <Stack.Screen name="WelcomeScreen" component={WelcomeScreen} />
-          <Stack.Screen name="LoginScreen" component={LoginScreen} />
-          <Stack.Screen name="RegisterScreen" component={RegisterScreen} />
-          <Stack.Screen name="ChatScreen" component={ChatScreen} />
+          <Stack.Screen name="WelcomeScreen" component={WelcomeScreen} options={{headerShown: false}} />
+          <Stack.Screen name="LoginScreen" component={LoginScreen} options={{headerBackTitleVisible: false, title: ' '}}/>
+          <Stack.Screen name="RegisterScreen" component={RegisterScreen}options={{headerBackTitleVisible: false, title: ' '}} />
+          <Stack.Screen name="ChatScreen" component={ChatScreen} options={{headerBackTitleVisible: false, title: 'Brainy'}} />
         </Stack.Navigator>
       </NavigationContainer>
     )
