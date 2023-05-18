@@ -64,18 +64,20 @@ User: `; */
         "model": "gpt-3.5-turbo",
         "messages": [userMessage,systemMessage]
       }
-      response = await fetch("https://api.openai.com/v1/chat/completions",{
+      await fetch("https://api.openai.com/v1/chat/completions",{
           method : "POST",
           headers : {
             "Authorization": "Bearer " + apiKey,
             "Content-Type": "application/json",
           },
           body: JSON.stringify(apiRequestBody)
-      }).then((data) => {
-        return data.json();
-      }).then((data) => {
-        console.log(data.choices[0].message.content)
-        return data.choices[0].message.content
+      }).then((dataResponse) => {
+        return dataResponse.json();
+      }).then((dataResponse) => {
+        console.log(dataResponse.choices[0].message.content)
+        setData([...data, { type: "user", text: textInput }, { type: "bot", text: dataResponse.choices[0].message.content }]);
+        setTextInput("");
+        
       })
 
       break; // exit the loop if the request succeeds
@@ -90,11 +92,11 @@ User: `; */
       }
     }
   }
-  if (response) {
+ /* if (response) {
     const text = response.data.choices[0].text;
     setData([...data, { type: "user", text: textInput }, { type: "bot", text: text }]);
     setTextInput("");
-  };
+  };*/
 };
 
 /*
