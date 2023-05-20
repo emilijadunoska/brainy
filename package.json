@@ -20,6 +20,8 @@
     "bcrypt": "^5.1.0",
     "expo": "^48.0.10",
     "expo-constants": "^14.2.1",
+    "expo-device": "^5.2.1",
+    "expo-notifications": "^0.18.1",
     "expo-status-bar": "~1.4.4",
     "firebase": "^9.19.1",
     "openai": "^3.2.1",
