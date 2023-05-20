@@ -16,7 +16,7 @@ const SplashScreen = (props) => {
 
       useEffect(() => {
         if (authLoaded){
-            props.navigation.replace('WelcomeScreen')
+            props.navigation.replace('OnboardingScreen')
         }
       }, [authLoaded, props.navigation]);
 
