@@ -4,15 +4,26 @@ import { Text, View, Button, Platform } from 'react-native';
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 import OnboardingScreen from './src/screens/OnboardingScreen';
-import HomeScreen from './src/screens/ChatScreen';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import WelcomeScreen from './src/screens/WelcomeScreen';
 import LoginScreen from './src/screens/LoginScreen';
 import RegisterScreen from './src/screens/RegisterScreen';
 import ChatScreen from './src/screens/ChatScreen';
 import { schedulePushNotification } from './BackgroundNotification';
+import SplashScreen from './src/screens/SplashScreen';
+import * as Device from 'expo-device';
+import * as Notifications from 'expo-notifications';
+import { useState, useEffect, useRef } from 'react';
 
 const Stack = createStackNavigator();
+
+Notifications.setNotificationHandler({
+  handleNotification: async () => ({
+    shouldShowAlert: true,
+    shouldPlaySound: false,
+    shouldSetBadge: false,
+  }),
+});
 
 const App = () => {
   const [isAppFirstLaunched, setIsAppFirstLaunched] = React.useState(null);
@@ -23,9 +34,9 @@ const App = () => {
     const appData = await AsyncStorage.getItem('isAppFirstLaunched');
     if (appData == null) {
       setIsAppFirstLaunched(true);
-      AsyncStorage.setItem('isAppFirstLaunched', 'false');
+      AsyncStorage.setItem('isAppFirstLaunched', 'true');
     } else {
-      setIsAppFirstLaunched(false);
+      setIsAppFirstLaunched(true);
     }
   }
   fetchData();
@@ -35,6 +46,7 @@ const App = () => {
     isAppFirstLaunched != null && (
       <NavigationContainer>
         <Stack.Navigator screenOptions={{headerShown: true}}>
+        <Stack.Screen name="SplashScreen" component={SplashScreen} options={{headerShown: false}} />
           {isAppFirstLaunched && (
             <Stack.Screen
               name="OnboardingScreen"
