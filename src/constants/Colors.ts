@@ -5,7 +5,9 @@ const purple = "#282534";
 const gray = "#ECECEC";
 const lightBlue = "#f1f4ff";
 
+
 export default {
+  black: black,
   white: white,
   darkText: dark,
   text: black,
