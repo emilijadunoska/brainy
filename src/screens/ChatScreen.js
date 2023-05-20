@@ -5,6 +5,7 @@ import {
   SafeAreaView,
   ScrollView,
   Text,
+  AppState,
 } from "react-native";
 import React, { useState, useEffect, useCallback } from "react";
 //import axios, { Axios } from "axios";
@@ -27,11 +28,18 @@ export default function ChatScreen() {
   const apiURL = "https://api.openai.com/v1/chat/completions";
   const logo = "https://upload.wikimedia.org/wikipedia/commons/thumb/0/04/ChatGPT_logo.svg/640px-ChatGPT_logo.svg.png";
 
+  const [appState, setAppState] = useState(AppState.currentState);
+
   useEffect(() => {
+    AppState.addEventListener('change', handleAppStateChange);
     firstMessage();
+    return () => {
+      AppState.removeEventListener('change', handleAppStateChange);
+    };
   }, []);
 
   const firstMessage = () => {
+    
     setMessages([
       {
         _id: 1,
@@ -104,6 +112,26 @@ export default function ChatScreen() {
     setMessages((previousMessages) =>
       GiftedChat.append(previousMessages, [newMessage])
     );
+  };
+
+//Detect when the application went in background
+  const handleAppStateChange = (nextAppState) => {
+    if (appState.match(/inactive|background/) && nextAppState === 'active') {
+      console.log('App has come to the foreground!');
+      BackgroundTimer.stopBackgroundTimer();
+      startTimer();
+    }
+    if (nextAppState.match(/inactive|background/)) {
+      console.log('App went to background!');
+    }
+    setAppState(nextAppState);
+  };
+
+  const startTimer = () => {
+    BackgroundTimer.runBackgroundTimer(() => { 
+      console.log("tick"); 
+    }, 
+    1000);
   };
 
   return (
