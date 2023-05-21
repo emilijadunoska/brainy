@@ -16,6 +16,7 @@ import { schedulePushNotification } from "./BackgroundNotification";
 import SplashScreen from "./src/screens/SplashScreen";
 import * as Notifications from "expo-notifications";
 import NotificationsScreen from "./src/screens/NotificationsScreen";
+import ConfirmationScreen from "./src/screens/ConfirmationScreen";
 
 const Stack = createStackNavigator();
 
@@ -99,6 +100,11 @@ const App = () => {
             name="NotificationsScreen"
             component={NotificationsScreen}
             options={{ headerBackTitleVisible: false, title: " " }}
+          />
+            <Stack.Screen
+            name="ConfirmationScreen"
+            component={ConfirmationScreen}
+            options={{ headerShown: false, title: " " }}
           />
           <Stack.Screen
             name="ChatScreen"
