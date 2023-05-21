@@ -52,7 +52,7 @@ const styles = StyleSheet.create({
     fontSize: 35,
     fontWeight: "bold",
     textTransform: "uppercase",
-    marginTop: 10, // Adjust the margin value to create spacing between the splash image and the text
+    marginTop: 10, 
   },
 });
 

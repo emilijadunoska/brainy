@@ -1,4 +1,5 @@
 import "react-native-gesture-handler";
+import { Image } from "react-native";
 import React from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import {
@@ -14,6 +15,7 @@ import ChatScreen from "./src/screens/ChatScreen";
 import { schedulePushNotification } from "./BackgroundNotification";
 import SplashScreen from "./src/screens/SplashScreen";
 import * as Notifications from "expo-notifications";
+import NotificationsScreen from "./src/screens/NotificationsScreen";
 
 const Stack = createStackNavigator();
 
@@ -75,12 +77,13 @@ const App = () => {
             <Stack.Screen
               name="OnboardingScreen"
               component={OnboardingScreen}
+              options={{ headerShown: false, title: " " }}
             />
           )}
           <Stack.Screen
             name="WelcomeScreen"
             component={WelcomeScreen}
-            options={{ headerShown: false }}
+            options={{ headerShown: false, title: " " }}
           />
           <Stack.Screen
             name="LoginScreen"
@@ -90,6 +93,11 @@ const App = () => {
           <Stack.Screen
             name="RegisterScreen"
             component={RegisterScreen}
+            options={{ headerBackTitleVisible: false, title: " " }}
+          />
+          <Stack.Screen
+            name="NotificationsScreen"
+            component={NotificationsScreen}
             options={{ headerBackTitleVisible: false, title: " " }}
           />
           <Stack.Screen

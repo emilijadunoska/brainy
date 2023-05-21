@@ -21,7 +21,7 @@ const { width, height } = Dimensions.get("window");
 const WelcomeScreen = ({navigation}) => {
   return (
     <SafeAreaView>
-      <View>
+      <View style={{ backgroundColor: 'white'}}>
         <ImageBackground
           style={{ height: height / 2 }}
           resizeMode="contain"

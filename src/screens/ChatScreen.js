@@ -2,20 +2,10 @@ import {
   View,
   StyleSheet,
   Dimensions,
-  SafeAreaView,
-  ScrollView,
-  Text,
   AppState,
 } from "react-native";
 import React, { useState, useEffect, useCallback } from "react";
-//import axios, { Axios } from "axios";
-import Colors from "../constants/Colors";
-import FontSize from "../constants/FontSize";
-import Spacing from "../constants/Spacing";
-import AppTextInput from "../../components/AppTextInput";
-import { Bubble, GiftedChat, Send } from "react-native-gifted-chat";
-import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
-import { v4 as messageIdGenerator } from "uuid";
+import { Bubble, GiftedChat } from "react-native-gifted-chat";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 const { width, height } = Dimensions.get("window");
