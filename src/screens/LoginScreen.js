@@ -16,6 +16,7 @@ import FontSize from "../constants/FontSize";
 import Spacing from "../constants/Spacing";
 import AppTextInput from "../../components/AppTextInput";
 import { auth } from "../../firebase";
+import NotificationsScreen from "./NotificationsScreen";
 
 const { width, height } = Dimensions.get("window");
 
@@ -26,7 +27,7 @@ const Login = ({ navigation }) => {
   useEffect(() => {
    const unsubscribe =  auth.onAuthStateChanged( user => {
       if (user) {
-        navigation.navigate("ChatScreen")
+        navigation.navigate("NotificationsScreen")
       }
     })
     return unsubscribe
