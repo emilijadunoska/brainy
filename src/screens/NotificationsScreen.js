@@ -1,17 +1,38 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { View, Text, StyleSheet, Image, TouchableOpacity, SafeAreaView } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import Colors from "../constants/Colors";
-import Spacing from "../constants/Spacing";
+import DateTimePickerModal from "react-native-modal-datetime-picker";
+import { useNavigation } from "@react-navigation/native";
 
 
 
-const NotificationsScreen = ({ navigation }) => {
+const NotificationsScreen = () => {
   const insets = useSafeAreaInsets();
+  const navigation = useNavigation();
 
-  const handleEnableNotifications = () => {
-    navigation.navigate('ChatScreen')
+  const [isDatePickerVisible, setDatePickerVisible] = useState(false);
+  const [selectedTime, setSelectedTime] = useState(null);
+
+  const showDatePicker = () => {
+    setDatePickerVisible(true);
   };
+
+  const hideDatePicker = () => {
+    setDatePickerVisible(false);
+  };
+
+  const clearTimeSelection = () => {
+    setSelectedTime(null);
+  };
+
+  const handleConfirm = (date) => {
+    const formattedTime = date.toLocaleTimeString([], { hour: "numeric", minute: "2-digit" });
+    setSelectedTime(formattedTime);
+    hideDatePicker();
+    navigation.navigate('ConfirmationScreen', { selectedTime: formattedTime});
+  };
+  
 
   const handleNotNow = () => {
     // Code to handle "Not Now" button press
@@ -22,7 +43,7 @@ const NotificationsScreen = ({ navigation }) => {
       <View style={styles.topContainer}>
         <Text style={styles.heading}>Before you start</Text>
         <Text style={styles.subHeading}>
-          Enable push notifications to get reminders to check in with Brainy.
+          Choose when you want to receive reminders to check in with Brainy.
         </Text>
       </View>
       <View style={styles.middleContainer}>
@@ -33,16 +54,23 @@ const NotificationsScreen = ({ navigation }) => {
         />
       </View>
       <View style={styles.bottomContainer}>
-        <TouchableOpacity
-          style={styles.button}
-          onPress={handleEnableNotifications}
-        >
-          <Text style={styles.buttonText}>ENABLE NOTIFICATIONS</Text>
-        </TouchableOpacity>
+        {selectedTime ? (
+          <Text style={styles.selectedTimeText}>Selected Time: {selectedTime}</Text>
+        ) : (
+          <TouchableOpacity style={styles.button} onPress={showDatePicker}>
+            <Text style={styles.buttonText}>SELECT TIME</Text>
+          </TouchableOpacity>
+        )}
         <TouchableOpacity onPress={handleNotNow}>
           <Text style={styles.nextText}>Not now</Text>
         </TouchableOpacity>
       </View>
+      <DateTimePickerModal
+        isVisible={isDatePickerVisible}
+        mode="time"
+        onConfirm={handleConfirm}
+        onCancel={hideDatePicker}
+      />
     </SafeAreaView>
   );
 };
@@ -89,17 +117,16 @@ const styles = StyleSheet.create({
   },
   button: {
     backgroundColor: "transparent",
-    borderWidth: 2,
-    borderColor: Colors.primary,
     paddingVertical: 15,
     paddingHorizontal: 20,
     marginBottom: 15,
-    padding: Spacing,
     borderRadius: 20,
-    width: "80%"
+    width: "80%",
+    borderWidth: 2,
+    borderColor: Colors.primary,
   },
   buttonText: {
-    color: Colors.primary ,
+    color: Colors.primary,
     fontSize: 16,
     fontWeight: "bold",
     textAlign: "center",
@@ -111,9 +138,16 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     textAlign: "center",
     textTransform: "uppercase",
-    marginTop: 15
+    marginTop: 15,
+  },
+  selectedTimeText: {
+    color: Colors.primary,
+    fontSize: 16,
+    fontWeight: "bold",
+    textAlign: "center",
+    textTransform: "uppercase",
+    marginBottom: 15,
   },
 });
-
 
 export default NotificationsScreen;
