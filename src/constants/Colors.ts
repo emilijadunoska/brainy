@@ -4,9 +4,14 @@ const dark = "#626262";
 const purple = "#282534";
 const gray = "#ECECEC";
 const lightBlue = "#f1f4ff";
+const brown = '#b87642';
+const darkGrey = '#777777'
+
 
 
 export default {
+  darkGrey: darkGrey,
+  brown: brown,
   black: black,
   white: white,
   darkText: dark,
