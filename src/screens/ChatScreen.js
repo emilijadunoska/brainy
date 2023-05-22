@@ -1,28 +1,17 @@
-
 import {
   View,
   StyleSheet,
   Dimensions,
-  SafeAreaView,
-  ScrollView,
-  Text,
   AppState,
 } from "react-native";
 import React, { useRef, useState, useEffect, useCallback } from "react";
-//import axios, { Axios } from "axios";
-import Colors from "../constants/Colors";
-import FontSize from "../constants/FontSize";
-import Spacing from "../constants/Spacing";
-import AppTextInput from "../../components/AppTextInput";
-import { Bubble, GiftedChat, Send } from "react-native-gifted-chat";
-import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
-import { v4 as messageIdGenerator } from "uuid";
+import { GiftedChat, Send, Bubble } from "react-native-gifted-chat";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-
+import { Ionicons } from "@expo/vector-icons";
 
 const { width, height } = Dimensions.get("window");
 
-export default function ChatScreen() {
+export default function ChatScreen({navigation}) {
   const [messages, setMessages] = useState([]);
   const { bottom } = useSafeAreaInsets();
 
@@ -30,24 +19,22 @@ export default function ChatScreen() {
 
   const apiKey = "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";
   const apiURL = "https://api.openai.com/v1/chat/completions";
-  const logo = "https://upload.wikimedia.org/wikipedia/commons/thumb/0/04/ChatGPT_logo.svg/640px-ChatGPT_logo.svg.png";
+  const logo =
+    "https://upload.wikimedia.org/wikipedia/commons/thumb/0/04/ChatGPT_logo.svg/640px-ChatGPT_logo.svg.png";
 
   const appState = useRef(AppState.currentState);
   const [appStateVisible, setAppStateVisible] = useState(appState.currentState);
 
-
   useEffect(() => {
-    AppState.addEventListener('change', handleAppStateChange);
+    AppState.addEventListener("change", handleAppStateChange);
     firstMessage();
 
     return () => {
-      AppState.removeEventListener('change', handleAppStateChange);
-
+      AppState.removeEventListener("change", handleAppStateChange);
     };
   }, []);
 
   const firstMessage = () => {
-
     const initialMessage = [
       {
         _id: 1,
@@ -70,7 +57,6 @@ export default function ChatScreen() {
     );
     const value = message[0]?.text;
     callApi(value);
-
   }, []);
 
   const callApi = async (value) => {
@@ -79,8 +65,8 @@ export default function ChatScreen() {
     const apiRequestBody = {
       model: "gpt-3.5-turbo",
       messages: [
-        { role: 'system', content: prompt },
-        { role: 'user', content: value },
+        { role: "system", content: prompt },
+        { role: "user", content: value },
       ],
       max_tokens: 1024,
       temperature: 0,
@@ -99,7 +85,11 @@ export default function ChatScreen() {
       const data = await res.json();
       console.log("API Response:", data); // Log the response to check the structure and content
 
-      if (data.choices && data.choices.length > 0 && data.choices[0]?.message?.content) {
+      if (
+        data.choices &&
+        data.choices.length > 0 &&
+        data.choices[0]?.message?.content
+      ) {
         const response = data.choices[0].message.content;
         addNewMessage(response);
       }
@@ -127,29 +117,34 @@ export default function ChatScreen() {
 
   //Detect when the application went in background
   const handleAppStateChange = (nextAppState) => {
-    if (appState.current.match(/inactive|background/) && nextAppState === 'active') {
-      console.log('App has come to the foreground!');
-
+    if (
+      appState.current.match(/inactive|background/) &&
+      nextAppState === "active"
+    ) {
+      console.log("App has come to the foreground!");
     }
     if (nextAppState.match(/inactive|background/)) {
-      const currentBackgroundTime = new Date();  // Store the current timestamp when the app goes into the background
-      console.log('App went to background at:', currentBackgroundTime.toLocaleTimeString());
+      const currentBackgroundTime = new Date(); // Store the current timestamp when the app goes into the background
+      console.log(
+        "App went to background at:",
+        currentBackgroundTime.toLocaleTimeString()
+      );
       summarizeConversation();
     }
-    appState.current = nextAppState
-    setAppStateVisible(AppState.currentState)
-    console.log("Appstate:", appState.current)
+    appState.current = nextAppState;
+    setAppStateVisible(AppState.currentState);
+    console.log("Appstate:", appState.current);
   };
 
   const summarizeConversation = async () => {
-    const conversation = messagesRef.current.map(message => `${message.user.name}: ${message.text}`).join('\n');
+    const conversation = messagesRef.current
+      .map((message) => `${message.user.name}: ${message.text}`)
+      .join("\n");
     const prompt = `Summarize the following conversation: \n${conversation}`;
 
     const apiRequestBody = {
       model: "gpt-3.5-turbo",
-      messages: [
-        { role: 'system', content: prompt },
-      ],
+      messages: [{ role: "system", content: prompt }],
       max_tokens: 500,
       temperature: 0.7,
     };
@@ -167,7 +162,11 @@ export default function ChatScreen() {
       const data = await res.json();
       console.log("API Response:", data); // Log the response to check the structure and content
 
-      if (data.choices && data.choices.length > 0 && data.choices[0]?.message?.content) {
+      if (
+        data.choices &&
+        data.choices.length > 0 &&
+        data.choices[0]?.message?.content
+      ) {
         const response = `In the last conversation, you talked about: ${data.choices[0].message.content}`;
         addNewMessage(response);
       }
@@ -176,6 +175,23 @@ export default function ChatScreen() {
     }
   };
 
+  React.useLayoutEffect(() => {
+    navigation.setOptions({
+      headerTitleStyle: { color: '#282534' },
+      headerTintColor: '#282534',
+    });
+  }, [navigation]);
+
+  const renderSend = (props) => {
+    return (
+      <Send {...props}>
+        <View style={{ marginRight: 10, marginBottom: 10 }}>
+          <Ionicons name="send" size={26} color="#282534" />
+        </View>
+      </Send>
+    );
+  };
+  
   return (
     <View style={{ flex: 1, paddingBottom: bottom }}>
       <GiftedChat
@@ -186,6 +202,7 @@ export default function ChatScreen() {
         }}
         alwaysShowSend
         scrollToBottom
+        renderSend={renderSend}
       />
     </View>
   );
@@ -205,5 +222,8 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
     borderBottomColor: "#D3D3D3",
     borderBottomWidth: 1,
+  },
+  sendButton: {
+    marginLeft: 10,
   },
 });
