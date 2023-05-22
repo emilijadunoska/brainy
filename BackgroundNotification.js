@@ -8,12 +8,13 @@ Notifications.setNotificationHandler({
   }),
 });
 
-async function schedulePushNotification() {
+async function schedulePushNotification(date) {
   // Set the date and time for the notification
-  const trigger = new Date(); // Use the current date and time
+  /*const trigger = new Date(); // Use the current date and time
   trigger.setHours(14); // Set the hour (in 24-hour format)
   trigger.setMinutes(52); // Set the minute
-  trigger.setSeconds(0); // Set the second
+  trigger.setSeconds(0); // Set the second 
+  */
 
   await Notifications.scheduleNotificationAsync({
     content: {
@@ -22,8 +23,8 @@ async function schedulePushNotification() {
       data: { data: 'random' },
     },
     trigger: {
-      hour: trigger.getHours(),
-      minute: trigger.getMinutes(),
+      hour: date.getHours(),
+      minute: date.getMinutes(),
       repeats: true, // Repeat the notification daily at the specified time
     },
   });

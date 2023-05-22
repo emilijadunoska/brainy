@@ -12,27 +12,18 @@ import WelcomeScreen from "./src/screens/WelcomeScreen";
 import LoginScreen from "./src/screens/LoginScreen";
 import RegisterScreen from "./src/screens/RegisterScreen";
 import ChatScreen from "./src/screens/ChatScreen";
-import { schedulePushNotification } from "./BackgroundNotification";
 import SplashScreen from "./src/screens/SplashScreen";
-import * as Notifications from "expo-notifications";
 import NotificationsScreen from "./src/screens/NotificationsScreen";
 import ConfirmationScreen from "./src/screens/ConfirmationScreen";
 
 const Stack = createStackNavigator();
 
-Notifications.setNotificationHandler({
-  handleNotification: async () => ({
-    shouldShowAlert: true,
-    shouldPlaySound: false,
-    shouldSetBadge: false,
-  }),
-});
+
 
 const App = () => {
   const [isAppFirstLaunched, setIsAppFirstLaunched] = React.useState(null);
 
   React.useEffect(() => {
-    schedulePushNotification();
     async function fetchData() {
       const appData = await AsyncStorage.getItem("isAppFirstLaunched");
       if (appData == null) {

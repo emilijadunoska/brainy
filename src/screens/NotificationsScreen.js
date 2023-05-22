@@ -4,8 +4,16 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import Colors from "../constants/Colors";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import { useNavigation } from "@react-navigation/native";
+import { schedulePushNotification } from "../../BackgroundNotification";
+import * as Notifications from "expo-notifications";
 
-
+Notifications.setNotificationHandler({
+  handleNotification: async () => ({
+    shouldShowAlert: true,
+    shouldPlaySound: false,
+    shouldSetBadge: false,
+  }),
+});
 
 const NotificationsScreen = () => {
   const insets = useSafeAreaInsets();
@@ -30,6 +38,8 @@ const NotificationsScreen = () => {
     const formattedTime = date.toLocaleTimeString([], { hour: "numeric", minute: "2-digit" });
     setSelectedTime(formattedTime);
     hideDatePicker();
+    console.log(date.getMinutes()+'----'+date.getHours());
+    schedulePushNotification(date);
     navigation.navigate('ConfirmationScreen', { selectedTime: formattedTime});
   };
   
