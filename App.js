@@ -15,10 +15,10 @@ import ChatScreen from "./src/screens/ChatScreen";
 import SplashScreen from "./src/screens/SplashScreen";
 import NotificationsScreen from "./src/screens/NotificationsScreen";
 import ConfirmationScreen from "./src/screens/ConfirmationScreen";
+import { Ionicons } from "@expo/vector-icons";
+import SettingsScreen from "./src/screens/SettingsScreen";
 
 const Stack = createStackNavigator();
-
-
 
 const App = () => {
   const [isAppFirstLaunched, setIsAppFirstLaunched] = React.useState(null);
@@ -92,7 +92,7 @@ const App = () => {
             component={NotificationsScreen}
             options={{ headerBackTitleVisible: false, title: " " }}
           />
-            <Stack.Screen
+          <Stack.Screen
             name="ConfirmationScreen"
             component={ConfirmationScreen}
             options={{ headerShown: false, title: " " }}
@@ -100,7 +100,23 @@ const App = () => {
           <Stack.Screen
             name="ChatScreen"
             component={ChatScreen}
-            options={{ headerBackTitleVisible: false, title: "Brainy" }}
+            options={({ navigation }) => ({
+              title: "Brainy",
+              headerRight: () => (
+                <Ionicons
+                  name="ellipsis-vertical"
+                  size={24}
+                  color="#000"
+                  style={{ marginRight: 10 }}
+                  onPress={() => navigation.navigate("SettingsScreen")}
+                />
+              ),
+            })}
+          />
+          <Stack.Screen
+            name="SettingsScreen"
+            component={SettingsScreen}
+            options={{ title: "Settings" }}
           />
         </Stack.Navigator>
       </NavigationContainer>
