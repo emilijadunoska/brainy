@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import  { useState } from 'react';
+import { useState } from "react";
 import {
   SafeAreaView,
   View,
@@ -21,26 +21,29 @@ import NotificationsScreen from "./NotificationsScreen";
 const { width, height } = Dimensions.get("window");
 
 const Login = ({ navigation }) => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
   useEffect(() => {
-   const unsubscribe =  auth.onAuthStateChanged( user => {
+    const unsubscribe = auth.onAuthStateChanged((user) => {
       if (user) {
-        navigation.navigate("NotificationsScreen")
+        navigation.navigate("NotificationsScreen");
       }
-    })
-    return unsubscribe
-  },[])
- 
+    });
+    return unsubscribe;
+  }, []);
+
   const handleLogin = () => {
-    auth.signInWithEmailAndPassword(email, password)
-    .then(userCredentials => {
-      const user = userCredentials.user;
-      console.log(user.email)
-    })
-    .catch(err => { alert(err.message)})
-  }
+    auth
+      .signInWithEmailAndPassword(email, password)
+      .then((userCredentials) => {
+        const user = userCredentials.user;
+        console.log(user.email);
+      })
+      .catch((err) => {
+        alert(err.message);
+      });
+  };
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: Colors.white }}>
       <StatusBar backgroundColor={Colors.white} />
@@ -67,9 +70,18 @@ const Login = ({ navigation }) => {
           </Text>
         </View>
         <View style={{ marginVertical: Spacing * 3 }}>
-          <AppTextInput placeholder="Email" value={email} onChangeText={text => setEmail(text)}></AppTextInput>
+          <AppTextInput
+            placeholder="Email"
+            value={email}
+            onChangeText={(text) => setEmail(text)}
+          ></AppTextInput>
 
-          <AppTextInput placeholder="Password" value={password} onChangeText={text => setPassword(text)} secureTextEntry></AppTextInput>
+          <AppTextInput
+            placeholder="Password"
+            value={password}
+            onChangeText={(text) => setPassword(text)}
+            secureTextEntry
+          ></AppTextInput>
         </View>
 
         <View>
@@ -85,7 +97,7 @@ const Login = ({ navigation }) => {
           </Text>
         </View>
         <TouchableOpacity
-        onPress={handleLogin}
+          onPress={handleLogin}
           style={{
             padding: Spacing * 2,
             backgroundColor: Colors.primary,
@@ -99,7 +111,6 @@ const Login = ({ navigation }) => {
             shadowOpacity: 0.1,
             shadowRadius: Spacing,
           }}
-          
         >
           <Text
             style={{
@@ -111,6 +122,15 @@ const Login = ({ navigation }) => {
             Sing in
           </Text>
         </TouchableOpacity>
+        <Text
+          style={{
+            color: Colors.black,
+            textAlign: "center",
+            fontSize: FontSize.small,
+          }}
+        >
+          Don't have an account yet?
+        </Text>
 
         <TouchableOpacity
           style={{
@@ -128,73 +148,6 @@ const Login = ({ navigation }) => {
             Create new account
           </Text>
         </TouchableOpacity>
-
-        <View
-          style={{
-            marginVertical: Spacing * 2,
-          }}
-        >
-          <Text
-            style={{
-              color: Colors.primary,
-              textAlign: "center",
-              fontSize: FontSize.small,
-            }}
-          >
-            Or continue with
-          </Text>
-
-          <View
-            style={{
-              marginTop: Spacing,
-              flexDirection: "row",
-              justifyContent: "center",
-            }}
-          >
-            <TouchableOpacity
-              style={{
-                padding: Spacing,
-                backgroundColor: Colors.gray,
-                borderRadius: Spacing / 2,
-                marginHorizontal: Spacing,
-              }}
-            >
-              <Ionicons
-                name="logo-google"
-                color={Colors.dark}
-                size={Spacing * 2}
-              />
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={{
-                padding: Spacing,
-                backgroundColor: Colors.gray,
-                borderRadius: Spacing / 2,
-                marginHorizontal: Spacing,
-              }}
-            >
-              <Ionicons
-                name="logo-apple"
-                color={Colors.dark}
-                size={Spacing * 2}
-              />
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={{
-                padding: Spacing,
-                backgroundColor: Colors.gray,
-                borderRadius: Spacing / 2,
-                marginHorizontal: Spacing,
-              }}
-            >
-              <Ionicons
-                name="logo-facebook"
-                color={Colors.dark}
-                size={Spacing * 2}
-              />
-            </TouchableOpacity>
-          </View>
-        </View>
       </View>
     </SafeAreaView>
   );
