@@ -8,6 +8,7 @@ import {
   Dimensions,
   StatusBar,
   BackHandler,
+  StyleSheet,
 } from "react-native";
 import { TextInput } from "react-native-gesture-handler";
 import { Ionicons } from "@expo/vector-icons";
@@ -70,7 +71,7 @@ const Login = ({ navigation }) => {
           </Text>
         </View>
         <View style={{ marginVertical: Spacing * 3 }}>
-          <AppTextInput
+          <AppTextInput 
             placeholder="Email"
             value={email}
             onChangeText={(text) => setEmail(text)}
@@ -84,18 +85,12 @@ const Login = ({ navigation }) => {
           ></AppTextInput>
         </View>
 
-        <View>
-          <Text
-            style={{
-              fontSize: FontSize.small,
-              color: Colors.primary,
-              alignSelf: "flex-end",
-            }}
-          >
+        <TouchableOpacity style={styles.button}>
+          <Text  style={styles.buttonText}>
             {" "}
             Forgot your password?{" "}
           </Text>
-        </View>
+        </TouchableOpacity>
         <TouchableOpacity
           onPress={handleLogin}
           style={{
@@ -131,26 +126,53 @@ const Login = ({ navigation }) => {
         >
           Don't have an account yet?
         </Text>
-
+        <View style={styles.container}>
         <TouchableOpacity
-          style={{
-            padding: Spacing * 3,
-          }}
+          style={styles.accBtn}
           onPress={() => navigation.navigate("RegisterScreen")}
         >
-          <Text
-            style={{
-              color: Colors.black,
-              textAlign: "center",
-              fontSize: FontSize.small,
-            }}
-          >
+          <Text style={styles.buttonText}>
             Create new account
           </Text>
         </TouchableOpacity>
+        </View>
       </View>
     </SafeAreaView>
   );
 };
+const styles = StyleSheet.create({
+  button: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: 'transparent',
+    borderRadius: 5,
+    borderWidth: 1,
+    borderColor: Colors.primary, // Adjust the color to your preference
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+  },
+  buttonText: {
+    color: Colors.primary, // Adjust the color to your preference
+    fontSize: 16,
+    fontWeight: 'bold',
+    textAlign: 'center',
+  },
+  container: {
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  accBtn:{
+    width: '50%',
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: 'transparent',
+    borderRadius: 5,
+    borderWidth: 1,
+    borderColor: Colors.primary, // Adjust the color to your preference
+    paddingVertical: 10,
+    paddingHorizontal: 10,
+    marginVertical: 10,
+  }
+});
 
 export default Login;
