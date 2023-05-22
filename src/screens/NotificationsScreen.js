@@ -45,7 +45,7 @@ const NotificationsScreen = () => {
   
 
   const handleNotNow = () => {
-    // Code to handle "Not Now" button press
+    navigation.navigate('ChatScreen')
   };
 
   return (
