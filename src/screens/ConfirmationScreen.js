@@ -15,7 +15,7 @@ const ConfirmationScreen = ({ route }) => {
   const { selectedTime } = route.params;
   const navigation = useNavigation();
   const insets = useSafeAreaInsets();
-
+  
 
   const handleStartChatting = () => {
     navigation.navigate("ChatScreen");
