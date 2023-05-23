@@ -7,6 +7,7 @@ import {
   Dimensions,
   StatusBar,
   Alert,
+  StyleSheet,
 } from "react-native";
 import { TextInput } from "react-native-gesture-handler";
 import { Ionicons } from "@expo/vector-icons";
@@ -52,6 +53,9 @@ const Register = ({ navigation }) => {
         alert(err.message);
       });
   };
+  const handleHaveAccount = async () => {
+    navigation.navigate("LoginScreen")
+  };
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: Colors.white }}>
@@ -63,7 +67,7 @@ const Register = ({ navigation }) => {
               fontSize: FontSize.xLarge,
               color: Colors.primary,
               fontWeight: "bold",
-              marginVertical: Spacing * 3,
+              marginVertical: Spacing * 2,
             }}
           >
             Create an account
@@ -109,7 +113,7 @@ const Register = ({ navigation }) => {
           style={{
             padding: Spacing * 2,
             backgroundColor: Colors.primary,
-            marginVertical: Spacing * 3,
+            marginVertical: Spacing * 2,
             borderRadius: Spacing,
             shadowColor: Colors.primary,
             shadowOffset: {
@@ -131,32 +135,48 @@ const Register = ({ navigation }) => {
             Register
           </Text>
         </TouchableOpacity>
-
+        <View style={styles.container}>
         <TouchableOpacity
-          style={{
-            padding: Spacing * 3,
-          }}
-          onPress={handleRegister}
+          style={styles.button}
+          onPress={handleHaveAccount}
         >
-          <Text
-            style={{
-              color: Colors.black,
-              textAlign: "center",
-              fontSize: FontSize.small,
-            }}
-          >
+          <Text style={styles.buttonText}>
             Already have an account?
           </Text>
         </TouchableOpacity>
-
+        </View>
         <View
           style={{
-            marginVertical: Spacing * 2,
+            marginVertical: Spacing ,
           }}
         ></View>
       </View>
     </SafeAreaView>
   );
 };
+
+const styles = StyleSheet.create({
+  button: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: 'transparent',
+    borderRadius: 5,
+    borderWidth: 1,
+    borderColor: Colors.primary, // Adjust the color to your preference
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+  },
+  buttonText: {
+    color: Colors.primary, // Adjust the color to your preference
+    fontSize: 16,
+    fontWeight: 'bold',
+    textAlign: 'center',
+  },
+  container: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginVertical: Spacing*2,
+  },
+});
 
 export default Register;
