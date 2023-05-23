@@ -8,11 +8,14 @@ import React, { useRef, useState, useEffect, useCallback } from "react";
 import { GiftedChat, Send, Bubble } from "react-native-gifted-chat";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Ionicons } from "@expo/vector-icons";
+import { auth, database } from "../../firebase";
+import { getDatabase, ref, set, push, update, onValue, off } from "firebase/database";
 
 const { width, height } = Dimensions.get("window");
 
 export default function ChatScreen({navigation}) {
   const [messages, setMessages] = useState([]);
+  const [userData, setUserData] = useState(null); 
   const { bottom } = useSafeAreaInsets();
 
   const messagesRef = useRef([]);
@@ -27,29 +30,56 @@ export default function ChatScreen({navigation}) {
 
   useEffect(() => {
     AppState.addEventListener("change", handleAppStateChange);
-    firstMessage();
-
+    fetchUserData();
     return () => {
       AppState.removeEventListener("change", handleAppStateChange);
     };
   }, []);
 
-  const firstMessage = () => {
-    const initialMessage = [
-      {
+  const fetchUserData = () => {  // Function to fetch user data
+    const user = auth.currentUser;
+    if (user) {
+      const db = getDatabase();
+      const userRef = ref(db, `users/${user.uid}`);
+      onValue(userRef, (snapshot) => {
+        const data = snapshot.val();
+        setUserData(data);
+        firstMessage(data);  // Pass user data to the firstMessage function
+      });
+    }
+  };
+
+  const firstMessage = (data) => {
+    const initialMessage = [];
+    if (data) {
+      const greetingMessage = {
         _id: 1,
-        text: "Hello, how are you today?",
+        text: `Hello ${data.name}, how are you today?`,
         createdAt: new Date(),
         user: {
           _id: 2,
           name: "Chatbot GPT",
           avatar: logo,
         },
-      },
-    ];
-    setMessages(initialMessage);
-    messagesRef.current = initialMessage;
-  };
+      };
+    initialMessage.push(greetingMessage);
+    if (data.lastConversationSummary) {  // If the last conversation exists
+      const lastConversationMessage = {
+        _id: 2,
+        text: data.lastConversationSummary,  // Show the last conversation
+        createdAt: new Date(),
+        user: {
+          _id: 2,
+          name: "Chatbot GPT",
+          avatar: logo,
+        },
+      };
+      initialMessage.push(lastConversationMessage);
+    }
+  }
+  setMessages(initialMessage);
+  messagesRef.current = initialMessage;
+};
 
   const onSend = useCallback((message = []) => {
     setMessages((previousMessages) =>
@@ -169,11 +199,34 @@ export default function ChatScreen({navigation}) {
       ) {
         const response = `In the last conversation, you talked about: ${data.choices[0].message.content}`;
         addNewMessage(response);
+
+        saveSummaryToFirebase(response);
       }
     } catch (error) {
       console.error("API Error:", error);
     }
   };
+
+  const saveSummaryToFirebase = (summary) => {
+        
+    const user = auth.currentUser;
+    console.log(user.toString);
+  
+  if (user != null) {
+    const userId = user.uid; // Get logged in user's ID
+    console.log(userId);
+    const db = getDatabase();
+    const userRef = ref(db, `users/${userId}`);
+
+    update(userRef, {
+      lastConversationSummary: summary,
+    });
+  } else {
+    console.log("No user is signed in.");
+  }
+  }
+
+  
 
   React.useLayoutEffect(() => {
     navigation.setOptions({
