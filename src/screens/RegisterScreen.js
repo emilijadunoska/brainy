@@ -38,6 +38,7 @@ const Register = ({ navigation }) => {
         const uid = user.uid;
         db = getDatabase();
         set(ref(db, "users/" + uid), {
+          name: name,
           email: email,
           password: password,
         });
