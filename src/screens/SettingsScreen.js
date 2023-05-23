@@ -17,7 +17,7 @@ const SettingsScreen = ({ navigation }) => {
   };
 
   const handleNotifications = () => {
-    // Code to navigate to Notifications screen
+    navigation.navigate("NotificationsScreen");
   };
 
   const handleHelpAndSupport = () => {
@@ -28,7 +28,8 @@ const SettingsScreen = ({ navigation }) => {
     // Code to navigate to About and Legal screen
   };
   const handleLogout = () => {
-    // Code to handle logout functionality
+    // Code firebase logout & brief note  
+    navigation.navigate("WelcomeScreen")
   };
 
   React.useLayoutEffect(() => {
