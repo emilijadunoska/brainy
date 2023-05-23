@@ -74,7 +74,7 @@ export default function ChatScreen({navigation}) {
           avatar: logo,
         },
       };
-      initialMessage.push(lastConversationMessage);
+     // initialMessage.push(lastConversationMessage);
     }
   }
   setMessages(initialMessage);
