@@ -1,15 +1,42 @@
-import React from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { View, Text, StyleSheet } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { Ionicons } from "@expo/vector-icons";
 import Colors from "../constants/Colors";
 import FontSize from "../constants/FontSize";
+import { auth, database } from "../../firebase";
+import {
+  getDatabase,
+  ref,
+  set,
+  push,
+  update,
+  onValue,
+  off,
+} from "firebase/database";
 
 const ProfileScreen = ({ navigation }) => {
-  const user = {
-    name: "Emilija",
-    email: "emilijadunoska@gmail.com",
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+
+  useEffect(() => {
+    fetchUserData();
+  }, []);
+
+  const fetchUserData = () => {
+    const user = auth.currentUser;
+    if (user) {
+      const db = getDatabase();
+      const userRef = ref(db, `users/${user.uid}`);
+      onValue(userRef, (snapshot) => {
+        const data = snapshot.val();
+        setName(data.name);
+        setEmail(data.email);
+      });
+    }
   };
+
+
   const getInitials = (name) => {
     const names = name.split(" ");
     const initials = names.map((n) => n.charAt(0).toUpperCase()).join("");
@@ -48,15 +75,15 @@ const ProfileScreen = ({ navigation }) => {
     <View style={styles.container}>
 
       <View style={styles.avatarContainer}>
-        {generateAvatar(user.name)}
-        <Text style={styles.name}>{user.name}</Text>
+        {generateAvatar(name)}
+        <Text style={styles.name}>{name}</Text>
       </View>
 
       <View style={styles.form}>
         <Text style={styles.infoLabel}>Name</Text>
-        <Text style={styles.infoValue}>{user.name}</Text>
+        <Text style={styles.infoValue}>{name}</Text>
         <Text style={styles.infoLabel}>Email</Text>
-        <Text style={styles.infoValue}>{user.email}</Text>
+        <Text style={styles.infoValue}>{email}</Text>
       </View>
     </View>
   );
