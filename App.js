@@ -17,6 +17,10 @@ import NotificationsScreen from "./src/screens/NotificationsScreen";
 import ConfirmationScreen from "./src/screens/ConfirmationScreen";
 import { Ionicons } from "@expo/vector-icons";
 import SettingsScreen from "./src/screens/SettingsScreen";
+import ProfileScreen from "./src/screens/ProfileScreen";
+import EditProfileScreen from "./src/screens/EditProfileScreen";
+
+
 
 const Stack = createStackNavigator();
 
@@ -104,12 +108,12 @@ const App = () => {
               title: "Brainy",
               headerRight: () => (
                 <Ionicons
-                  name="ellipsis-vertical"
+                  name="settings-outline"
                   size={24}
                   color="#000"
                   style={{ marginRight: 10 }}
                   onPress={() => navigation.navigate("SettingsScreen")}
-                />
+                />                
               ),
             })}
           />
@@ -117,6 +121,16 @@ const App = () => {
             name="SettingsScreen"
             component={SettingsScreen}
             options={{ title: "Settings" }}
+          />
+          <Stack.Screen
+            name="ProfileScreen"
+            component={ProfileScreen}
+            options={{ title: "My Profile" }}
+          />
+          <Stack.Screen
+            name="EditProfileScreen"
+            component={EditProfileScreen}
+            options={{ title: "Edit profile" }}
           />
         </Stack.Navigator>
       </NavigationContainer>

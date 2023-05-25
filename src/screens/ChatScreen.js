@@ -1,21 +1,24 @@
-import {
-  View,
-  StyleSheet,
-  Dimensions,
-  AppState,
-} from "react-native";
+import { View, StyleSheet, Dimensions, AppState } from "react-native";
 import React, { useRef, useState, useEffect, useCallback } from "react";
 import { GiftedChat, Send, Bubble } from "react-native-gifted-chat";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Ionicons } from "@expo/vector-icons";
 import { auth, database } from "../../firebase";
-import { getDatabase, ref, set, push, update, onValue, off } from "firebase/database";
+import {
+  getDatabase,
+  ref,
+  set,
+  push,
+  update,
+  onValue,
+  off,
+} from "firebase/database";
 
 const { width, height } = Dimensions.get("window");
 
-export default function ChatScreen({navigation}) {
+export default function ChatScreen({ navigation }) {
   const [messages, setMessages] = useState([]);
-  const [userData, setUserData] = useState(null); 
+  const [userData, setUserData] = useState(null);
   const { bottom } = useSafeAreaInsets();
 
   const messagesRef = useRef([]);
@@ -36,7 +39,8 @@ export default function ChatScreen({navigation}) {
     };
   }, []);
 
-  const fetchUserData = () => {  // Function to fetch user data
+  const fetchUserData = () => {
+    // Function to fetch user data
     const user = auth.currentUser;
     if (user) {
       const db = getDatabase();
@@ -44,7 +48,7 @@ export default function ChatScreen({navigation}) {
       onValue(userRef, (snapshot) => {
         const data = snapshot.val();
         setUserData(data);
-        firstMessage(data);  // Pass user data to the firstMessage function
+        firstMessage(data); // Pass user data to the firstMessage function
       });
     }
   };
@@ -62,24 +66,25 @@ export default function ChatScreen({navigation}) {
           avatar: logo,
         },
       };
-    initialMessage.push(greetingMessage);
-    if (data.lastConversationSummary) {  // If the last conversation exists
-      const lastConversationMessage = {
-        _id: 2,
-        text: data.lastConversationSummary,  // Show the last conversation
-        createdAt: new Date(),
-        user: {
+      initialMessage.push(greetingMessage);
+      if (data.lastConversationSummary) {
+        // If the last conversation exists
+        const lastConversationMessage = {
           _id: 2,
-          name: "Chatbot GPT",
-          avatar: logo,
-        },
-      };
-     // initialMessage.push(lastConversationMessage);
+          text: data.lastConversationSummary, // Show the last conversation
+          createdAt: new Date(),
+          user: {
+            _id: 2,
+            name: "Chatbot GPT",
+            avatar: logo,
+          },
+        };
+        // initialMessage.push(lastConversationMessage);
+      }
     }
-  }
-  setMessages(initialMessage);
-  messagesRef.current = initialMessage;
-};
+    setMessages(initialMessage);
+    messagesRef.current = initialMessage;
+  };
 
   const onSend = useCallback((message = []) => {
     setMessages((previousMessages) =>
@@ -208,30 +213,27 @@ export default function ChatScreen({navigation}) {
   };
 
   const saveSummaryToFirebase = (summary) => {
-        
     const user = auth.currentUser;
     console.log(user.toString);
-  
-  if (user != null) {
-    const userId = user.uid; // Get logged in user's ID
-    console.log(userId);
-    const db = getDatabase();
-    const userRef = ref(db, `users/${userId}`);
 
-    update(userRef, {
-      lastConversationSummary: summary,
-    });
-  } else {
-    console.log("No user is signed in.");
-  }
-  }
+    if (user != null) {
+      const userId = user.uid; // Get logged in user's ID
+      console.log(userId);
+      const db = getDatabase();
+      const userRef = ref(db, `users/${userId}`);
 
-  
+      update(userRef, {
+        lastConversationSummary: summary,
+      });
+    } else {
+      console.log("No user is signed in.");
+    }
+  };
 
   React.useLayoutEffect(() => {
     navigation.setOptions({
-      headerTitleStyle: { color: '#282534' },
-      headerTintColor: '#282534',
+      headerTitleStyle: { color: "#282534" },
+      headerTintColor: "#282534",
     });
   }, [navigation]);
 
@@ -244,7 +246,7 @@ export default function ChatScreen({navigation}) {
       </Send>
     );
   };
-  
+
   return (
     <View style={{ flex: 1, paddingBottom: bottom }}>
       <GiftedChat

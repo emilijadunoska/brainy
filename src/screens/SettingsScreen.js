@@ -8,13 +8,17 @@ import {
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import Constants from "expo-constants";
+
+import ProfileScreen from "./ProfileScreen";
+
 import { auth, database } from "../../firebase";
+
 
 const SettingsScreen = ({ navigation }) => {
   const appVersion = Constants.manifest.version;
 
   const handleProfileSettings = () => {
-    // Code to navigate to User Profile Settings screen
+    navigation.navigate('ProfileScreen');
   };
 
   const handleNotifications = () => {
