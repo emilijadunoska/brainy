@@ -29,10 +29,10 @@ export default function ChatScreen({navigation}) {
   const [appStateVisible, setAppStateVisible] = useState(appState.currentState);
 
   useEffect(() => {
-    AppState.addEventListener("change", handleAppStateChange);
+    const unKeyboardDidShow = AppState.addEventListener("change", handleAppStateChange);
     fetchUserData();
     return () => {
-      AppState.removeEventListener("change", handleAppStateChange);
+      unKeyboardDidShow.remove();
     };
   }, []);
 
