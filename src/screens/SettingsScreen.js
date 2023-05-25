@@ -9,11 +9,16 @@ import {
 import { Ionicons } from "@expo/vector-icons";
 import Constants from "expo-constants";
 
+import ProfileScreen from "./ProfileScreen";
+
+import { auth, database } from "../../firebase";
+
+
 const SettingsScreen = ({ navigation }) => {
   const appVersion = Constants.manifest.version;
 
   const handleProfileSettings = () => {
-    // Code to navigate to User Profile Settings screen
+    navigation.navigate('ProfileScreen');
   };
 
   const handleNotifications = () => {
@@ -28,9 +33,22 @@ const SettingsScreen = ({ navigation }) => {
     // Code to navigate to About and Legal screen
   };
   const handleLogout = () => {
-    // Code firebase logout & brief note  
-    navigation.navigate("WelcomeScreen")
-  };
+    const user = auth.currentUser;
+  
+    if (user) {
+      auth
+        .signOut()
+        .then(() => {
+          console.log('User signed out!');
+          navigation.navigate('WelcomeScreen');
+        })
+        .catch((error) => {
+          console.log('Sign out error', error);
+        });
+    } else {
+      console.log("No user is signed in.");
+    }
+  };  
 
   React.useLayoutEffect(() => {
     navigation.setOptions({
