@@ -9,8 +9,6 @@ import {
   getDatabase,
   ref,
   set,
-  push,
-  update,
   onValue,
   off,
 } from "firebase/database";
