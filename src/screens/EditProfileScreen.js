@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   View,
   Text,
@@ -9,14 +9,36 @@ import {
 } from "react-native";
 import Colors from "../constants/Colors";
 import FontSize from "../constants/FontSize";
+import { auth, database } from "../../firebase";
+import {
+  getDatabase,
+  ref,
+  set,
+  onValue,
+  off,
+  update
+} from "firebase/database";
 
 const EditProfileScreen = ({navigation}) => {
-  const user = {
-    name: "Emilija",
-    email: "emilijadunoska@gmail.com",
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  
+  useEffect(() => {
+    fetchUserData();
+  }, []);
+
+  const fetchUserData = () => {
+    const user = auth.currentUser;
+    if (user) {
+      const db = getDatabase();
+      const userRef = ref(db, `users/${user.uid}`);
+      onValue(userRef, (snapshot) => {
+        const data = snapshot.val();
+        setName(data.name);
+        setEmail(data.email);
+      });
+    }
   };
-  const [name, setName] = useState(user.name);
-  const [email, setEmail] = useState(user.email);
 
   const getInitials = (name) => {
     const names = name.split(" ");
@@ -37,7 +59,30 @@ const EditProfileScreen = ({navigation}) => {
   };
 
   // Ova e funkcijata za buttonot kokje go sejvnit profilot  
-  const handleSubmit = () => {};
+    const handleSubmit = () => {
+      const user = auth.currentUser;
+      if (user) {
+        const db = getDatabase();
+        const userRef = ref(db, `users/${user.uid}`);
+        const updates = {
+          name: name,
+          email: email,
+        };
+    
+        update(userRef, updates)
+          .then(() => {
+            console.log("User data updated successfully");
+            // Update the state to reflect the changes immediately
+            setName(name);
+            setEmail(email);
+            navigation.goBack(); // Navigate back to the previous screen
+          })
+          .catch((error) => {
+            console.log("Error updating user data:", error);
+          });
+      }
+    };
+    
 
   React.useLayoutEffect(() => {
     navigation.setOptions({
@@ -49,8 +94,8 @@ const EditProfileScreen = ({navigation}) => {
   return (
     <View style={styles.container}>
       <View style={styles.avatarContainer}>
-        {generateAvatar(user.name)}
-        <Text style={styles.name}>{user.name}</Text>
+        {generateAvatar(name)}
+        <Text style={styles.name}>{name}</Text>
       </View>
       <View style={styles.form}>
         <Text style={styles.label}>Name</Text>
