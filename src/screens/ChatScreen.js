@@ -44,41 +44,51 @@ export default function ChatScreen({navigation}) {
       onValue(userRef, (snapshot) => {
         const data = snapshot.val();
         setUserData(data);
-        firstMessage(data);  // Pass user data to the firstMessage function
+        greetingMessage(data);  // Pass user data to the greetingMessage function
       });
     }
   };
 
-  const firstMessage = (data) => {
-    const initialMessage = [];
-    if (data) {
-      const greetingMessage = {
-        _id: 1,
-        text: `Hello ${data.name}, how are you today?`,
-        createdAt: new Date(),
-        user: {
-          _id: 2,
-          name: "Chatbot GPT",
-          avatar: logo,
-        },
-      };
-    initialMessage.push(greetingMessage);
-    if (data.lastConversationSummary) {  // If the last conversation exists
-      const lastConversationMessage = {
-        _id: 2,
-        text: data.lastConversationSummary,  // Show the last conversation
-        createdAt: new Date(),
-        user: {
-          _id: 2,
-          name: "Chatbot GPT",
-          avatar: logo,
-        },
-      };
-     // initialMessage.push(lastConversationMessage);
+const greetingMessage = async (summary) => {
+  const greetigs = [];
+  if(summary.lastConversationSummary){
+  console.log("Summary:"+summary.lastConversationSummary);
+  const prompt = `You are acting like psychologist/terapist and you try to help our users with their mental health problems. After every conversation you make a summary and save it but users don't know about that, we only use it to help them and have evidence of their situation so don't talk about past messages. Can you please create a greeting for user that comes back to our app and has the following summary : ${summary.lastConversationSummary}?`;
+
+  const apiRequestBody = {
+    model: "gpt-3.5-turbo",
+    messages: [{ role: "system", content: prompt }],
+    max_tokens: 512,
+    temperature: 0.5,
+  };
+
+  try {
+    const message = await fetch(apiURL, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${apiKey}`,
+      },
+      body: JSON.stringify(apiRequestBody),
+    });
+
+    const data = await message.json();
+    console.log("API Response:", data); // Log the response to check the structure and content
+
+    if (
+      data.choices &&
+      data.choices.length > 0 &&
+      data.choices[0]?.message?.content
+    ) {
+      addNewMessage(data.choices[0].message.content);
     }
+  } catch (error) {
+    console.error("API Error:", error);
   }
-  setMessages(initialMessage);
-  messagesRef.current = initialMessage;
+}
+else {
+  addNewMessage(`Hello ${summary.name}, how are you today?`)
+}
 };
 
   const onSend = useCallback((message = []) => {
