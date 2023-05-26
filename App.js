@@ -19,7 +19,8 @@ import { Ionicons } from "@expo/vector-icons";
 import SettingsScreen from "./src/screens/SettingsScreen";
 import ProfileScreen from "./src/screens/ProfileScreen";
 import EditProfileScreen from "./src/screens/EditProfileScreen";
-
+import ResetPasswordScreen from "./src/screens/ResetPasswordScreen";
+import EnterNewPasswordScreen from './src/screens/EnterNewPasswordScreen';
 
 
 const Stack = createStackNavigator();
@@ -131,6 +132,18 @@ const App = () => {
             name="EditProfileScreen"
             component={EditProfileScreen}
             options={{ title: "Edit profile" }}
+          />
+           <Stack.Screen
+            name="ResetPasswordScreen"
+            component={ResetPasswordScreen}
+            options={{ headerBackTitleVisible: false, title: 
+            ''}}
+          />
+          <Stack.Screen
+            name="EnterNewPasswordScreen"
+            component={EnterNewPasswordScreen}
+            options={{ headerBackTitleVisible: false, title: 
+            ''}}
           />
         </Stack.Navigator>
       </NavigationContainer>
