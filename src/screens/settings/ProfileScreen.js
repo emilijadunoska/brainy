@@ -2,9 +2,9 @@ import React, { useState, useEffect, useCallback } from "react";
 import { View, Text, StyleSheet } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { Ionicons } from "@expo/vector-icons";
-import Colors from "../constants/Colors";
-import FontSize from "../constants/FontSize";
-import { auth, database } from "../../firebase";
+import Colors from "../../constants/Colors";
+import FontSize from "../../constants/FontSize";
+import { auth, database } from "../../../firebase";
 import {
   getDatabase,
   ref,
@@ -61,7 +61,7 @@ const ProfileScreen = ({ navigation }) => {
     navigation.setOptions({
       headerRight: () => (
         <TouchableOpacity style={styles.editButton} onPress={handleEditProfile}>
-          <Ionicons name="create-outline" size={24} color="#282534" />
+          <Ionicons name="create-outline" size={24} color="#282534" style={styles.optionRight} />
         </TouchableOpacity>
       ),
       headerTitleStyle: { color: "#282534" },
@@ -135,6 +135,9 @@ const styles = StyleSheet.create({
   },
   editButton: {
     marginRight: 10,
+  },
+  optionRight: {
+    marginRight: 10, 
   },
 });
 

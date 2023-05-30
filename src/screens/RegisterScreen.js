@@ -43,7 +43,7 @@ const Register = ({ navigation }) => {
           email: email,
           password: password,
         });
-        navigation.navigate("LoginScreen");
+        navigation.navigate("NotificationsScreen");
       })
       .then((data) => {
         //success callback

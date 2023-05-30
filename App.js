@@ -16,12 +16,14 @@ import SplashScreen from "./src/screens/SplashScreen";
 import NotificationsScreen from "./src/screens/NotificationsScreen";
 import ConfirmationScreen from "./src/screens/ConfirmationScreen";
 import { Ionicons } from "@expo/vector-icons";
-import SettingsScreen from "./src/screens/SettingsScreen";
-import ProfileScreen from "./src/screens/ProfileScreen";
-import EditProfileScreen from "./src/screens/EditProfileScreen";
+import SettingsScreen from "./src/screens/settings/SettingsScreen";
+import ProfileScreen from "./src/screens/settings/ProfileScreen";
+import EditProfileScreen from "./src/screens/settings/EditProfileScreen";
 import ResetPasswordScreen from "./src/screens/ResetPasswordScreen";
-import EnterNewPasswordScreen from './src/screens/EnterNewPasswordScreen';
-
+import EnterNewPasswordScreen from "./src/screens/EnterNewPasswordScreen";
+import NotificationSettingsScreen from "./src/screens/settings/NotificationSettingsScreen";
+import RemaindersSettings from "./src/screens/settings/RemaindersSettings";
+import { AppProvider } from "./AppContext";
 
 const Stack = createStackNavigator();
 
@@ -43,6 +45,7 @@ const App = () => {
 
   return (
     isAppFirstLaunched != null && (
+      <AppProvider>
       <NavigationContainer>
         <Stack.Navigator
           screenOptions={{
@@ -114,7 +117,7 @@ const App = () => {
                   color="#000"
                   style={{ marginRight: 10 }}
                   onPress={() => navigation.navigate("SettingsScreen")}
-                />                
+                />
               ),
             })}
           />
@@ -133,20 +136,32 @@ const App = () => {
             component={EditProfileScreen}
             options={{ title: "Edit profile" }}
           />
-           <Stack.Screen
+          <Stack.Screen
             name="ResetPasswordScreen"
             component={ResetPasswordScreen}
-            options={{ headerBackTitleVisible: false, title: 
-            ''}}
+            options={{ headerBackTitleVisible: false, title: "" }}
           />
           <Stack.Screen
             name="EnterNewPasswordScreen"
             component={EnterNewPasswordScreen}
-            options={{ headerBackTitleVisible: false, title: 
-            ''}}
+            options={{ headerBackTitleVisible: false, title: "" }}
+          />
+          <Stack.Screen
+            name="NotificationSettingsScreen"
+            component={NotificationSettingsScreen}
+            options={{title: "Notifications" }}
+          />
+          <Stack.Screen
+            name="RemaindersSettings"
+            component={RemaindersSettings}
+            options={{
+              
+              title: "Daily Remainders",
+            }}
           />
         </Stack.Navigator>
       </NavigationContainer>
+      </AppProvider>
     )
   );
 };
