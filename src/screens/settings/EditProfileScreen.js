@@ -7,9 +7,9 @@ import {
   StyleSheet,
   TouchableOpacity,
 } from "react-native";
-import Colors from "../constants/Colors";
-import FontSize from "../constants/FontSize";
-import { auth, database } from "../../firebase";
+import Colors from "../../constants/Colors";
+import FontSize from "../../constants/FontSize";
+import { auth, database } from "../../../firebase";
 import {
   getDatabase,
   ref,

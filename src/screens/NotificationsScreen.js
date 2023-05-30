@@ -1,11 +1,19 @@
-import React, { useState, useEffect } from "react";
-import { View, Text, StyleSheet, Image, TouchableOpacity, SafeAreaView } from "react-native";
+import React, { useState, useEffect, useContext } from "react";
+import {
+  View,
+  Text,
+  StyleSheet,
+  Image,
+  TouchableOpacity,
+  SafeAreaView,
+} from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import Colors from "../constants/Colors";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import { useNavigation } from "@react-navigation/native";
 import { schedulePushNotification } from "../../BackgroundNotification";
 import * as Notifications from "expo-notifications";
+import { AppContext } from "../../AppContext";
 
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
@@ -20,7 +28,7 @@ const NotificationsScreen = () => {
   const navigation = useNavigation();
 
   const [isDatePickerVisible, setDatePickerVisible] = useState(false);
-  const [selectedTime, setSelectedTime] = useState(null);
+  const { selectedTime, setReminderTime } = useContext(AppContext);
 
   const showDatePicker = () => {
     setDatePickerVisible(true);
@@ -30,60 +38,65 @@ const NotificationsScreen = () => {
     setDatePickerVisible(false);
   };
 
-  const clearTimeSelection = () => {
-    setSelectedTime(null);
-  };
-
   const handleConfirm = (date) => {
-    const formattedTime = date.toLocaleTimeString([], { hour: "numeric", minute: "2-digit" });
-    setSelectedTime(formattedTime);
+    const formattedTime = date.toLocaleTimeString([], {
+      hour: "numeric",
+      minute: "2-digit",
+    });
+    setReminderTime(formattedTime);
     hideDatePicker();
-    console.log(date.getMinutes()+'----'+date.getHours());
+    console.log(date.getMinutes() + "----" + date.getHours());
     schedulePushNotification(date);
-    navigation.navigate('ConfirmationScreen', { selectedTime: formattedTime});
+    navigation.navigate("ConfirmationScreen", { selectedTime: formattedTime });
   };
-  
 
   const handleNotNow = () => {
-    navigation.navigate('ChatScreen')
+    navigation.navigate("ChatScreen");
   };
 
-  return (
-    <SafeAreaView style={[styles.container, { paddingTop: insets.top, paddingBottom: insets.bottom }]}>
-      <View style={styles.topContainer}>
-        <Text style={styles.heading}>Before you start</Text>
-        <Text style={styles.subHeading}>
-          Choose when you want to receive reminders to check in with Brainy.
-        </Text>
-      </View>
-      <View style={styles.middleContainer}>
-        <Image
-          source={require("../../assets/pushNotifications.jpg")}
-          style={styles.image}
-          resizeMode="contain"
-        />
-      </View>
-      <View style={styles.bottomContainer}>
-        {selectedTime ? (
-          <Text style={styles.selectedTimeText}>Selected Time: {selectedTime}</Text>
-        ) : (
-          <TouchableOpacity style={styles.button} onPress={showDatePicker}>
-            <Text style={styles.buttonText}>SELECT TIME</Text>
+    return (
+      <SafeAreaView
+        style={[
+          styles.container,
+          { paddingTop: insets.top, paddingBottom: insets.bottom },
+        ]}
+      >
+        <View style={styles.topContainer}>
+          <Text style={styles.heading}>Before you start</Text>
+          <Text style={styles.subHeading}>
+            Choose when you want to receive reminders to check in with Brainy.
+          </Text>
+        </View>
+        <View style={styles.middleContainer}>
+          <Image
+            source={require("../../assets/pushNotifications.jpg")}
+            style={styles.image}
+            resizeMode="contain"
+          />
+        </View>
+        <View style={styles.bottomContainer}>
+          {selectedTime ? (
+            <Text style={styles.selectedTimeText}>
+              Selected Time: {selectedTime}
+            </Text>
+          ) : (
+            <TouchableOpacity style={styles.button} onPress={showDatePicker}>
+              <Text style={styles.buttonText}>SELECT TIME</Text>
+            </TouchableOpacity>
+          )}
+          <TouchableOpacity onPress={handleNotNow}>
+            <Text style={styles.nextText}>Not now</Text>
           </TouchableOpacity>
-        )}
-        <TouchableOpacity onPress={handleNotNow}>
-          <Text style={styles.nextText}>Not now</Text>
-        </TouchableOpacity>
-      </View>
-      <DateTimePickerModal
-        isVisible={isDatePickerVisible}
-        mode="time"
-        onConfirm={handleConfirm}
-        onCancel={hideDatePicker}
-      />
-    </SafeAreaView>
-  );
-};
+        </View>
+        <DateTimePickerModal
+          isVisible={isDatePickerVisible}
+          mode="time"
+          onConfirm={handleConfirm}
+          onCancel={hideDatePicker}
+        />
+      </SafeAreaView>
+    );
+  };
 
 const styles = StyleSheet.create({
   container: {
@@ -117,7 +130,7 @@ const styles = StyleSheet.create({
     color: Colors.darkGrey,
     fontSize: 18,
     textAlign: "center",
-    marginBottom: 10, 
+    marginBottom: 10,
     marginTop: 15,
   },
   image: {

@@ -29,7 +29,7 @@ const Login = ({ navigation }) => {
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged((user) => {
       if (user) {
-        navigation.navigate("NotificationsScreen");
+        navigation.navigate("ChatScreen");
       }
     });
     return unsubscribe;
