@@ -1,11 +1,12 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   View,
   Text,
   StyleSheet,
   TouchableOpacity,
   SafeAreaView,
-  Linking, 
+  Linking,
+  Alert,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import Constants from "expo-constants";
@@ -30,10 +31,15 @@ const SettingsScreen = ({ navigation }) => {
     navigation.navigate("FAQScreen");
   };
   const handlePrivacyPolicy = () => {
-    Linking.openURL('https://www.termsfeed.com/live/2b9d0068-fceb-4695-9556-e8bd2d148655');  };
+    Linking.openURL(
+      "https://www.termsfeed.com/live/2b9d0068-fceb-4695-9556-e8bd2d148655"
+    );
+  };
 
   const handleTermsAndConditions = () => {
-    Linking.openURL('https://www.termsfeed.com/live/cbb3653b-d517-4b31-b790-9f43a3436033');
+    Linking.openURL(
+      "https://www.termsfeed.com/live/cbb3653b-d517-4b31-b790-9f43a3436033"
+    );
   };
 
   const handleLogout = () => {
@@ -54,11 +60,36 @@ const SettingsScreen = ({ navigation }) => {
     }
   };
 
+  const handleDeleteAccount = () => {
+    Alert.alert(
+      "Delete account",
+      "Are you sure you want to delete your account?",
+      [
+        {
+          text: "No",
+          style: "cancel",
+        },
+        {
+          text: "Yes",
+          style: "destructive",
+          onPress: handleConfirmation, // ova e funkcijata kaj so trebit da e logikata za brisenje na akauntot
+        },
+      ],
+      { cancelable: true }
+    );
+  };
+
+  const handleConfirmation = () => {
+    // ova delot za tanja, tehnickata podrska na firebase  :D
+    // nakraj od funkcijava dodajmugo ova samo da go preusmerit na login/register:
+    // navigation.navigate("WelcomeScreen");
+  };
+
   React.useLayoutEffect(() => {
     navigation.setOptions({
       headerTitleStyle: { color: "#282534" },
       headerTintColor: "#282534",
-      headerBackTitle: 'Back',
+      headerBackTitle: "Back",
     });
   }, [navigation]);
 
@@ -75,7 +106,12 @@ const SettingsScreen = ({ navigation }) => {
           />
           <Text style={styles.optionText}>Profile Settings</Text>
         </View>
-        <Ionicons name="chevron-forward-outline" size={24} color="#282534" style={styles.optionArrow} />
+        <Ionicons
+          name="chevron-forward-outline"
+          size={24}
+          color="#282534"
+          style={styles.optionArrow}
+        />
       </TouchableOpacity>
 
       <TouchableOpacity style={styles.option} onPress={handleNotifications}>
@@ -88,66 +124,113 @@ const SettingsScreen = ({ navigation }) => {
           />
           <Text style={styles.optionText}>Notifications</Text>
         </View>
-        <Ionicons name="chevron-forward-outline" size={24} color="#282534" style={styles.optionArrow}/>
+        <Ionicons
+          name="chevron-forward-outline"
+          size={24}
+          color="#282534"
+          style={styles.optionArrow}
+        />
       </TouchableOpacity>
 
       <View style={styles.blankSpace} />
       <View style={styles.blankSpace} />
 
       <TouchableOpacity style={styles.option} onPress={handleFAQ}>
-      <View style={styles.optionLeft}>
+        <View style={styles.optionLeft}>
+          <Ionicons
+            name="chatbubble-outline"
+            size={24}
+            color="#282534"
+            style={styles.optionIcon}
+          />
+          <Text style={styles.optionText}>FAQ</Text>
+        </View>
         <Ionicons
-          name="chatbubble-outline"
+          name="chevron-forward-outline"
           size={24}
           color="#282534"
-          style={styles.optionIcon}
+          style={styles.optionArrow}
         />
-        <Text style={styles.optionText}>FAQ</Text>
-        </View>
-        <Ionicons name="chevron-forward-outline" size={24} color="#282534" style={styles.optionArrow} />
       </TouchableOpacity>
 
       <TouchableOpacity style={styles.option} onPress={handlePrivacyPolicy}>
-      <View style={styles.optionLeft}>
+        <View style={styles.optionLeft}>
+          <Ionicons
+            name="lock-closed"
+            size={24}
+            color="#282534"
+            style={styles.optionIcon}
+          />
+          <Text style={styles.optionText}>Privacy Policy</Text>
+        </View>
         <Ionicons
-          name="lock-closed"
+          name="chevron-forward-outline"
           size={24}
           color="#282534"
-          style={styles.optionIcon}
+          style={styles.optionArrow}
         />
-        <Text style={styles.optionText}>Privacy Policy</Text>
-        </View>
-        <Ionicons name="chevron-forward-outline" size={24} color="#282534" style={styles.optionArrow} />
       </TouchableOpacity>
 
-      <TouchableOpacity style={styles.option} onPress={handleTermsAndConditions}>
-      <View style={styles.optionLeft}>
+      <TouchableOpacity
+        style={styles.option}
+        onPress={handleTermsAndConditions}
+      >
+        <View style={styles.optionLeft}>
+          <Ionicons
+            name="document-text-outline"
+            size={24}
+            color="#282534"
+            style={styles.optionIcon}
+          />
+          <Text style={styles.optionText}>Terms & Conditions</Text>
+        </View>
         <Ionicons
-          name="document-text-outline"
+          name="chevron-forward-outline"
           size={24}
           color="#282534"
-          style={styles.optionIcon}
+          style={styles.optionArrow}
         />
-        <Text style={styles.optionText}>Terms & Conditions</Text>
-        </View>
-        <Ionicons name="chevron-forward-outline" size={24} color="#282534" style={styles.optionArrow} />
       </TouchableOpacity>
-
 
       <View style={styles.blankSpace} />
       <View style={styles.blankSpace} />
+
       <TouchableOpacity style={styles.option} onPress={handleLogout}>
-      <View style={styles.optionLeft}>
+        <View style={styles.optionLeft}>
+          <Ionicons
+            name="log-out-outline"
+            size={24}
+            color="#282534"
+            style={styles.optionIcon}
+          />
+          <Text style={styles.optionText}>Logout</Text>
+        </View>
         <Ionicons
-          name="log-out-outline"
+          name="chevron-forward-outline"
           size={24}
           color="#282534"
-          style={styles.optionIcon}
+          style={styles.optionArrow}
         />
-        <Text style={styles.optionText}>Logout</Text>
-        </View>
-        <Ionicons name="chevron-forward-outline" size={24} color="#282534" style={styles.optionArrow} />
       </TouchableOpacity>
+
+      <TouchableOpacity style={styles.option} onPress={handleDeleteAccount}>
+        <View style={styles.optionLeft}>
+          <Ionicons
+            name="trash-outline"
+            size={24}
+            color="#282534"
+            style={styles.optionIcon}
+          />
+          <Text style={styles.optionText}>Delete account</Text>
+        </View>
+        <Ionicons
+          name="chevron-forward-outline"
+          size={24}
+          color="#282534"
+          style={styles.optionArrow}
+        />
+      </TouchableOpacity>
+
       <View style={styles.versionContainer}>
         <Text style={styles.appVersion}>App Version: {appVersion}</Text>
       </View>
@@ -166,7 +249,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "space-between",
     borderTopWidth: 1,
-    borderTopColor: "#EAEAEA", 
+    borderTopColor: "#EAEAEA",
     borderBottomWidth: 1,
     borderBottomColor: "#EAEAEA",
     paddingVertical: 10,
@@ -192,13 +275,13 @@ const styles = StyleSheet.create({
     color: "#999999",
   },
   blankSpace: {
-    height: 20, 
+    height: 20,
   },
   optionIcon: {
-    marginLeft: 20, 
+    marginLeft: 20,
   },
   optionArrow: {
-    marginRight: 15, 
+    marginRight: 15,
     color: Colors.darkGrey,
   },
 });

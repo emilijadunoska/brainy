@@ -113,6 +113,7 @@ const App = () => {
             component={ChatScreen}
             options={({ navigation }) => ({
               title: "Brainy",
+              headerBackTitle: null,
               headerRight: () => (
                 <Ionicons
                   name="settings-outline"
