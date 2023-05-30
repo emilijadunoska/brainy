@@ -24,6 +24,9 @@ import EnterNewPasswordScreen from "./src/screens/EnterNewPasswordScreen";
 import NotificationSettingsScreen from "./src/screens/settings/NotificationSettingsScreen";
 import RemaindersSettings from "./src/screens/settings/RemaindersSettings";
 import { AppProvider } from "./AppContext";
+import Colors from "./src/constants/Colors";
+import FAQScreen from './src/screens/settings/FAQScreen';
+
 
 const Stack = createStackNavigator();
 
@@ -114,8 +117,7 @@ const App = () => {
                 <Ionicons
                   name="settings-outline"
                   size={24}
-                  color="#000"
-                  style={{ marginRight: 10 }}
+                  style={{ marginRight: 20, color: Colors.primary }}
                   onPress={() => navigation.navigate("SettingsScreen")}
                 />
               ),
@@ -157,6 +159,14 @@ const App = () => {
             options={{
               
               title: "Daily Remainders",
+            }}
+          />
+          <Stack.Screen
+            name="FAQScreen"
+            component={FAQScreen}
+            options={{
+              
+              title: "Frequently asked questions",
             }}
           />
         </Stack.Navigator>
