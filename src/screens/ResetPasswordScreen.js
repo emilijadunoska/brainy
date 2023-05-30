@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   View,
   Text,
@@ -11,15 +11,24 @@ import Colors from "../constants/Colors";
 import Spacing from "../constants/Spacing";
 import FontSize from "../constants/FontSize";
 import EnterNewPassword from "./EnterNewPasswordScreen";
+import { auth, database } from "../../firebase";
+import { getDatabase, ref, set } from "firebase/database";
 
 const ResetPasswordScreen = ({navigation}) => {
   const [email, setEmail] = useState("");
+  const [message, setMessage] = useState("");
 
   const handleResetPassword = () => {
-    // Handle resetting the password
-    // e.g., send a reset password email to the provided email address
-    console.log("Reset password email sent!");
-    navigation.navigate('EnterNewPasswordScreen');
+    auth.sendPasswordResetEmail(email)
+    .then(function() {
+      console.log("Reset password email successfully sent to:", email);
+      setMessage("Reset password email sent!");
+      navigation.navigate('LoginScreen');
+    })
+    .catch(function(error) {
+      console.log("Error in sending password reset email:", error);
+      setMessage("Error: " + error.message);
+    });
   };
 
   return (
