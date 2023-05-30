@@ -27,7 +27,7 @@ Notifications.setNotificationHandler({
 const RemaindersSettings = ({ navigation }) => {
   const [toggleValue, setToggleValue] = useState(false);
   const [isDatePickerVisible, setDatePickerVisible] = useState(false);
-  const { selectedTime, setReminderTime} = useContext(AppContext);
+  const { selectedTime, setReminderTime } = useContext(AppContext);
 
   const showDatePicker = () => {
     setDatePickerVisible(true);
@@ -78,9 +78,8 @@ const RemaindersSettings = ({ navigation }) => {
       <View style={styles.blankSpace} />
 
       {selectedTime ? (
-      <Text style={styles.optionText}>Your selection: {selectedTime}</Text>
-    ) : null}
-
+        <Text style={styles.optionText}>Your selection: {selectedTime}</Text>
+      ) : null}
 
       <View style={styles.blankSpace} />
 
@@ -101,7 +100,11 @@ const RemaindersSettings = ({ navigation }) => {
         onConfirm={handleConfirm}
         onCancel={hideDatePicker}
       />
-      <Toast ref={(ref) => Toast.setRef(ref)} position="bottom" />
+      <Toast
+        ref={(ref) => Toast.setRef(ref)}
+        position="bottom"
+        style={{ color: "red" }}
+      ></Toast>
     </View>
   );
 };

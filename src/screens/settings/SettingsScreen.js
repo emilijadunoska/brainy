@@ -5,6 +5,7 @@ import {
   StyleSheet,
   TouchableOpacity,
   SafeAreaView,
+  Linking, 
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import Constants from "expo-constants";
@@ -25,13 +26,16 @@ const SettingsScreen = ({ navigation }) => {
     navigation.navigate("NotificationSettingsScreen");
   };
 
-  const handleHelpAndSupport = () => {
-    // Code to navigate to Help and Support screen
+  const handleFAQ = () => {
+    navigation.navigate("FAQScreen");
+  };
+  const handlePrivacyPolicy = () => {
+    Linking.openURL('https://www.termsfeed.com/live/2b9d0068-fceb-4695-9556-e8bd2d148655');  };
+
+  const handleTermsAndConditions = () => {
+    Linking.openURL('https://www.termsfeed.com/live/cbb3653b-d517-4b31-b790-9f43a3436033');
   };
 
-  const handleAboutAndLegal = () => {
-    // Code to navigate to About and Legal screen
-  };
   const handleLogout = () => {
     const user = auth.currentUser;
 
@@ -86,33 +90,50 @@ const SettingsScreen = ({ navigation }) => {
         </View>
         <Ionicons name="chevron-forward-outline" size={24} color="#282534" style={styles.optionArrow}/>
       </TouchableOpacity>
+
       <View style={styles.blankSpace} />
       <View style={styles.blankSpace} />
 
-      <TouchableOpacity style={styles.option} onPress={handleHelpAndSupport}>
+      <TouchableOpacity style={styles.option} onPress={handleFAQ}>
       <View style={styles.optionLeft}>
         <Ionicons
-          name="help-circle-outline"
+          name="chatbubble-outline"
           size={24}
           color="#282534"
           style={styles.optionIcon}
         />
-        <Text style={styles.optionText}>Help and Support</Text>
+        <Text style={styles.optionText}>FAQ</Text>
         </View>
         <Ionicons name="chevron-forward-outline" size={24} color="#282534" style={styles.optionArrow} />
       </TouchableOpacity>
-      <TouchableOpacity style={styles.option} onPress={handleAboutAndLegal}>
+
+      <TouchableOpacity style={styles.option} onPress={handlePrivacyPolicy}>
       <View style={styles.optionLeft}>
         <Ionicons
-          name="information-circle-outline"
+          name="lock-closed"
           size={24}
           color="#282534"
           style={styles.optionIcon}
         />
-        <Text style={styles.optionText}>About and Legal</Text>
+        <Text style={styles.optionText}>Privacy Policy</Text>
         </View>
         <Ionicons name="chevron-forward-outline" size={24} color="#282534" style={styles.optionArrow} />
       </TouchableOpacity>
+
+      <TouchableOpacity style={styles.option} onPress={handleTermsAndConditions}>
+      <View style={styles.optionLeft}>
+        <Ionicons
+          name="document-text-outline"
+          size={24}
+          color="#282534"
+          style={styles.optionIcon}
+        />
+        <Text style={styles.optionText}>Terms & Conditions</Text>
+        </View>
+        <Ionicons name="chevron-forward-outline" size={24} color="#282534" style={styles.optionArrow} />
+      </TouchableOpacity>
+
+
       <View style={styles.blankSpace} />
       <View style={styles.blankSpace} />
       <TouchableOpacity style={styles.option} onPress={handleLogout}>

@@ -91,6 +91,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: "center",
+    backgroundColor: 'white',
   },
   avatarContainer: {
     alignItems: "center",
@@ -102,7 +103,6 @@ const styles = StyleSheet.create({
     borderRadius: 75,
     justifyContent: "center",
     alignItems: "center",
-  
   },
   avatarText: {
     fontSize: 60,
@@ -115,7 +115,7 @@ const styles = StyleSheet.create({
     marginTop: 10,
   },
   form: {
-    width: "80%",
+    width: "90%",
   },
   label: {
     marginTop: 20,
