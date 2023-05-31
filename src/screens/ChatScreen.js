@@ -20,7 +20,7 @@ export default function ChatScreen({ navigation }) {
 
   const messagesRef = useRef([]);
 
-  const apiKey = "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";
+  const apiKey = "";
   const apiURL = "https://api.openai.com/v1/chat/completions";
  
   const appState = useRef(AppState.currentState);
