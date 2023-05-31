@@ -6,6 +6,7 @@
 - [Namestitev](#namestitev)
 - [Uporaba](#uporaba)
 - [Tehnologije](#tehnologije)
+- [Avtorji](#avtorji)
 
 ## Opis
 
@@ -52,7 +53,7 @@ Mobilna aplikacija za duševno zdravje z ChatGPT terapevtom je zgrajena s pomoč
 - SonarQube: Statična analiza kode.
 - Jira: Orodje za organizacijo in sledenje dela.
 
-**Avtorji:**
+## Avtorji
 - Bojan Petrovski
 - Emilija Dunoska
 - Tanja Grozdani
