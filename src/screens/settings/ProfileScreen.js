@@ -1,16 +1,14 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect } from "react";
 import { View, Text, StyleSheet } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { Ionicons } from "@expo/vector-icons";
 import Colors from "../../constants/Colors";
 import FontSize from "../../constants/FontSize";
-import { auth, database } from "../../../firebase";
+import { auth } from "../../../firebase";
 import {
   getDatabase,
   ref,
-  set,
   onValue,
-  off,
 } from "firebase/database";
 
 const ProfileScreen = ({ navigation }) => {

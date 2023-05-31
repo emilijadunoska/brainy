@@ -10,9 +10,7 @@ import AppTextInput from "../../components/AppTextInput";
 import Colors from "../constants/Colors";
 import Spacing from "../constants/Spacing";
 import FontSize from "../constants/FontSize";
-import EnterNewPassword from "./EnterNewPasswordScreen";
 import { auth, database } from "../../firebase";
-import { getDatabase, ref, set } from "firebase/database";
 
 const ResetPasswordScreen = ({navigation}) => {
   const [email, setEmail] = useState("");

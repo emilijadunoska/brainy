@@ -4,12 +4,9 @@ import {
   Text,
   StyleSheet,
   TouchableOpacity,
-  SafeAreaView,
   Switch,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
-
-import { auth, database } from "../../../firebase";
 import Colors from "../../constants/Colors";
 import { AppContext } from "../../../AppContext";
 

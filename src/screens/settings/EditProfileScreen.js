@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import {
   View,
   Text,
-  Image,
   TextInput,
   StyleSheet,
   TouchableOpacity,
@@ -13,9 +12,7 @@ import { auth, database } from "../../../firebase";
 import {
   getDatabase,
   ref,
-  set,
   onValue,
-  off,
   update
 } from "firebase/database";
 
