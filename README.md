@@ -50,6 +50,7 @@ Mobilna aplikacija za duševno zdravje z ChatGPT terapevtom je zgrajena s pomoč
 - React Native: JavaScript ogrodje za izgradnjo mobilnih aplikacij.
 - Firebase: Celovita platforma za razvoj mobilnih in spletnih aplikacij, ki zagotavlja avtentikacijo in podatkovno bazo.
 - SonarQube: Statična analiza kode.
+- Jira: Orodje za organizacijo in sledenje dela.
 
 **Avtorji:**
 - Bojan Petrovski
