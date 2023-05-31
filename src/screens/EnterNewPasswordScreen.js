@@ -10,7 +10,7 @@ import AppTextInput from "../../components/AppTextInput";
 import Colors from "../constants/Colors";
 import Spacing from "../constants/Spacing";
 import FontSize from "../constants/FontSize";
-import LoginScreen from "./LoginScreen";
+
 
 const EnterNewPassword = ({navigation}) => {
   const [password, setPassword] = useState("");

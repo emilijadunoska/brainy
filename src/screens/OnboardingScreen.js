@@ -13,7 +13,6 @@ import {
 import Colors from "../constants/Colors";
 import FontSize from "../constants/FontSize";
 import Spacing from "../constants/Spacing";
-import { TransitionPresets } from "@react-navigation/stack";
 
 const { width, height } = Dimensions.get("window");
 

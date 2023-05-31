@@ -1,21 +1,17 @@
 import { View, StyleSheet, Dimensions, AppState } from "react-native";
 import React, { useRef, useState, useEffect, useCallback } from "react";
-import { GiftedChat, Send, Bubble } from "react-native-gifted-chat";
+import { GiftedChat, Send } from "react-native-gifted-chat";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Ionicons } from "@expo/vector-icons";
-import { auth, database } from "../../firebase";
+import { auth } from "../../firebase";
 import {
   getDatabase,
   ref,
-  set,
-  push,
   update,
   onValue,
-  off,
 } from "firebase/database";
 import logo from "../images/logo-white.png";
 
-const { width, height } = Dimensions.get("window");
 
 export default function ChatScreen({ navigation }) {
   const [messages, setMessages] = useState([]);
@@ -24,7 +20,7 @@ export default function ChatScreen({ navigation }) {
 
   const messagesRef = useRef([]);
 
-  const apiKey = "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";
+  const apiKey = "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";
   const apiURL = "https://api.openai.com/v1/chat/completions";
  
   const appState = useRef(AppState.currentState);
@@ -56,8 +52,8 @@ export default function ChatScreen({ navigation }) {
   };
 
   const greetingMessage = async (summary) => {
-    const greetigs = [];
-    if (summary.lastConversationSummary) {
+    
+    if (summary.lastConversationSummary!= null) {
       console.log("Summary:" + summary.lastConversationSummary);
       const prompt = `You are acting like psychologist/terapist and you try to help our users with their mental health problems. After every conversation you make a summary and save it but users don't know about that, we only use it to help them and have evidence of their situation so don't talk about past messages. Can you please create a greeting for user that comes back to our app and has the following summary : ${summary.lastConversationSummary}?`;
 

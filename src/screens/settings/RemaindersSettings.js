@@ -4,15 +4,13 @@ import {
   Text,
   StyleSheet,
   TouchableOpacity,
-  SafeAreaView,
-  Switch,
 } from "react-native";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import Colors from "../../constants/Colors";
 import { schedulePushNotification } from "../../../BackgroundNotification";
 import * as Notifications from "expo-notifications";
 import { AppContext } from "../../../AppContext";
-import NotificationSettingsScreen from "./NotificationSettingsScreen";
+
 import { Ionicons } from "@expo/vector-icons";
 import Toast from "react-native-toast-message";
 
@@ -25,7 +23,6 @@ Notifications.setNotificationHandler({
 });
 
 const RemaindersSettings = ({ navigation }) => {
-  const [toggleValue, setToggleValue] = useState(false);
   const [isDatePickerVisible, setDatePickerVisible] = useState(false);
   const { selectedTime, setReminderTime } = useContext(AppContext);
 

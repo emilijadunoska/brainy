@@ -1,4 +1,4 @@
-import React, { useDebugValue, useState } from "react";
+import React from "react";
 import {
   View,
   Text,
@@ -10,11 +10,8 @@ import {
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import Constants from "expo-constants";
-
-import ProfileScreen from "./ProfileScreen";
 import { getDatabase, ref, remove } from "firebase/database";
-import { auth, database } from "../../../firebase";
-import { getAuth } from 'firebase/auth';
+import { auth } from "../../../firebase";
 import Colors from "../../constants/Colors";
 
 const SettingsScreen = ({ navigation }) => {
