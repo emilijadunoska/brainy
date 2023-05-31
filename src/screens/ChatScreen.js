@@ -20,7 +20,7 @@ export default function ChatScreen({navigation}) {
 
   const messagesRef = useRef([]);
 
-  const apiKey = "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";
+  const apiKey = "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";
   const apiURL = "https://api.openai.com/v1/chat/completions";
   const logo =
     "https://upload.wikimedia.org/wikipedia/commons/thumb/0/04/ChatGPT_logo.svg/640px-ChatGPT_logo.svg.png";

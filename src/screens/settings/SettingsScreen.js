@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useDebugValue, useState } from "react";
 import {
   View,
   Text,
@@ -12,8 +12,9 @@ import { Ionicons } from "@expo/vector-icons";
 import Constants from "expo-constants";
 
 import ProfileScreen from "./ProfileScreen";
-
+import { getDatabase, ref, remove } from "firebase/database";
 import { auth, database } from "../../../firebase";
+import { getAuth } from 'firebase/auth';
 import Colors from "../../constants/Colors";
 
 const SettingsScreen = ({ navigation }) => {
@@ -79,163 +80,197 @@ const SettingsScreen = ({ navigation }) => {
     );
   };
 
+
   const handleConfirmation = () => {
-    // ova delot za tanja, tehnickata podrska na firebase  :D
-    // nakraj od funkcijava dodajmugo ova samo da go preusmerit na login/register:
-    // navigation.navigate("WelcomeScreen");
+    const user = auth.currentUser;
+    if (user) {
+      
+      const db = getDatabase();
+      const userRef = ref(db, `users/${user.uid}`);
+  
+      // Delete from  Realtime Database.
+      remove(userRef)
+        .then(() => {
+          console.log("User data deleted from Realtime Database!");
+  
+          //  delete the user account.
+          user.delete()
+            .then(() => {
+              console.log("User account deleted!");
+              if (navigation) {
+                navigation.navigate("WelcomeScreen");
+              } else {
+                console.log("navigation is undefined.");
+              }
+            })
+            .catch((error) => {
+              console.log("Delete account error", error);
+            });
+        })
+        .catch((error) => {
+          console.log("Delete data error", error);
+        });
+    } else {
+      console.log("No user is signed in.");
+    }
   };
+  
 
-  React.useLayoutEffect(() => {
-    navigation.setOptions({
-      headerTitleStyle: { color: "#282534" },
-      headerTintColor: "#282534",
-      headerBackTitle: "Back",
-    });
-  }, [navigation]);
+  
+  
 
-  return (
-    <View style={styles.container}>
-      <View style={styles.blankSpace} />
-      <TouchableOpacity style={styles.option} onPress={handleProfileSettings}>
-        <View style={styles.optionLeft}>
-          <Ionicons
-            name="person-circle-outline"
-            size={24}
-            color="#282534"
-            style={styles.optionIcon}
-          />
-          <Text style={styles.optionText}>Profile Settings</Text>
-        </View>
+
+React.useLayoutEffect(() => {
+  navigation.setOptions({
+    headerTitleStyle: { color: "#282534" },
+    headerTintColor: "#282534",
+    headerBackTitle: "Back",
+  });
+}, [navigation]);
+
+return (
+  <View style={styles.container}>
+    <View style={styles.blankSpace} />
+    <TouchableOpacity style={styles.option} onPress={handleProfileSettings}>
+      <View style={styles.optionLeft}>
         <Ionicons
-          name="chevron-forward-outline"
+          name="person-circle-outline"
           size={24}
           color="#282534"
-          style={styles.optionArrow}
+          style={styles.optionIcon}
         />
-      </TouchableOpacity>
-
-      <TouchableOpacity style={styles.option} onPress={handleNotifications}>
-        <View style={styles.optionLeft}>
-          <Ionicons
-            name="notifications-outline"
-            size={24}
-            color="#282534"
-            style={styles.optionIcon}
-          />
-          <Text style={styles.optionText}>Notifications</Text>
-        </View>
-        <Ionicons
-          name="chevron-forward-outline"
-          size={24}
-          color="#282534"
-          style={styles.optionArrow}
-        />
-      </TouchableOpacity>
-
-      <View style={styles.blankSpace} />
-      <View style={styles.blankSpace} />
-
-      <TouchableOpacity style={styles.option} onPress={handleFAQ}>
-        <View style={styles.optionLeft}>
-          <Ionicons
-            name="chatbubble-outline"
-            size={24}
-            color="#282534"
-            style={styles.optionIcon}
-          />
-          <Text style={styles.optionText}>FAQ</Text>
-        </View>
-        <Ionicons
-          name="chevron-forward-outline"
-          size={24}
-          color="#282534"
-          style={styles.optionArrow}
-        />
-      </TouchableOpacity>
-
-      <TouchableOpacity style={styles.option} onPress={handlePrivacyPolicy}>
-        <View style={styles.optionLeft}>
-          <Ionicons
-            name="lock-closed"
-            size={24}
-            color="#282534"
-            style={styles.optionIcon}
-          />
-          <Text style={styles.optionText}>Privacy Policy</Text>
-        </View>
-        <Ionicons
-          name="chevron-forward-outline"
-          size={24}
-          color="#282534"
-          style={styles.optionArrow}
-        />
-      </TouchableOpacity>
-
-      <TouchableOpacity
-        style={styles.option}
-        onPress={handleTermsAndConditions}
-      >
-        <View style={styles.optionLeft}>
-          <Ionicons
-            name="document-text-outline"
-            size={24}
-            color="#282534"
-            style={styles.optionIcon}
-          />
-          <Text style={styles.optionText}>Terms & Conditions</Text>
-        </View>
-        <Ionicons
-          name="chevron-forward-outline"
-          size={24}
-          color="#282534"
-          style={styles.optionArrow}
-        />
-      </TouchableOpacity>
-
-      <View style={styles.blankSpace} />
-      <View style={styles.blankSpace} />
-
-      <TouchableOpacity style={styles.option} onPress={handleLogout}>
-        <View style={styles.optionLeft}>
-          <Ionicons
-            name="log-out-outline"
-            size={24}
-            color="#282534"
-            style={styles.optionIcon}
-          />
-          <Text style={styles.optionText}>Logout</Text>
-        </View>
-        <Ionicons
-          name="chevron-forward-outline"
-          size={24}
-          color="#282534"
-          style={styles.optionArrow}
-        />
-      </TouchableOpacity>
-
-      <TouchableOpacity style={styles.option} onPress={handleDeleteAccount}>
-        <View style={styles.optionLeft}>
-          <Ionicons
-            name="trash-outline"
-            size={24}
-            color="#282534"
-            style={styles.optionIcon}
-          />
-          <Text style={styles.optionText}>Delete account</Text>
-        </View>
-        <Ionicons
-          name="chevron-forward-outline"
-          size={24}
-          color="#282534"
-          style={styles.optionArrow}
-        />
-      </TouchableOpacity>
-
-      <View style={styles.versionContainer}>
-        <Text style={styles.appVersion}>App Version: {appVersion}</Text>
+        <Text style={styles.optionText}>Profile Settings</Text>
       </View>
+      <Ionicons
+        name="chevron-forward-outline"
+        size={24}
+        color="#282534"
+        style={styles.optionArrow}
+      />
+    </TouchableOpacity>
+
+    <TouchableOpacity style={styles.option} onPress={handleNotifications}>
+      <View style={styles.optionLeft}>
+        <Ionicons
+          name="notifications-outline"
+          size={24}
+          color="#282534"
+          style={styles.optionIcon}
+        />
+        <Text style={styles.optionText}>Notifications</Text>
+      </View>
+      <Ionicons
+        name="chevron-forward-outline"
+        size={24}
+        color="#282534"
+        style={styles.optionArrow}
+      />
+    </TouchableOpacity>
+
+    <View style={styles.blankSpace} />
+    <View style={styles.blankSpace} />
+
+    <TouchableOpacity style={styles.option} onPress={handleFAQ}>
+      <View style={styles.optionLeft}>
+        <Ionicons
+          name="chatbubble-outline"
+          size={24}
+          color="#282534"
+          style={styles.optionIcon}
+        />
+        <Text style={styles.optionText}>FAQ</Text>
+      </View>
+      <Ionicons
+        name="chevron-forward-outline"
+        size={24}
+        color="#282534"
+        style={styles.optionArrow}
+      />
+    </TouchableOpacity>
+
+    <TouchableOpacity style={styles.option} onPress={handlePrivacyPolicy}>
+      <View style={styles.optionLeft}>
+        <Ionicons
+          name="lock-closed"
+          size={24}
+          color="#282534"
+          style={styles.optionIcon}
+        />
+        <Text style={styles.optionText}>Privacy Policy</Text>
+      </View>
+      <Ionicons
+        name="chevron-forward-outline"
+        size={24}
+        color="#282534"
+        style={styles.optionArrow}
+      />
+    </TouchableOpacity>
+
+    <TouchableOpacity
+      style={styles.option}
+      onPress={handleTermsAndConditions}
+    >
+      <View style={styles.optionLeft}>
+        <Ionicons
+          name="document-text-outline"
+          size={24}
+          color="#282534"
+          style={styles.optionIcon}
+        />
+        <Text style={styles.optionText}>Terms & Conditions</Text>
+      </View>
+      <Ionicons
+        name="chevron-forward-outline"
+        size={24}
+        color="#282534"
+        style={styles.optionArrow}
+      />
+    </TouchableOpacity>
+
+    <View style={styles.blankSpace} />
+    <View style={styles.blankSpace} />
+
+    <TouchableOpacity style={styles.option} onPress={handleLogout}>
+      <View style={styles.optionLeft}>
+        <Ionicons
+          name="log-out-outline"
+          size={24}
+          color="#282534"
+          style={styles.optionIcon}
+        />
+        <Text style={styles.optionText}>Logout</Text>
+      </View>
+      <Ionicons
+        name="chevron-forward-outline"
+        size={24}
+        color="#282534"
+        style={styles.optionArrow}
+      />
+    </TouchableOpacity>
+
+    <TouchableOpacity style={styles.option} onPress={handleDeleteAccount}>
+      <View style={styles.optionLeft}>
+        <Ionicons
+          name="trash-outline"
+          size={24}
+          color="#282534"
+          style={styles.optionIcon}
+        />
+        <Text style={styles.optionText}>Delete account</Text>
+      </View>
+      <Ionicons
+        name="chevron-forward-outline"
+        size={24}
+        color="#282534"
+        style={styles.optionArrow}
+      />
+    </TouchableOpacity>
+
+    <View style={styles.versionContainer}>
+      <Text style={styles.appVersion}>App Version: {appVersion}</Text>
     </View>
-  );
+  </View>
+);
 };
 
 const styles = StyleSheet.create({
