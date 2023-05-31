@@ -8,9 +8,9 @@ import {
   StatusBar,
   Alert,
   StyleSheet,
+  TouchableWithoutFeedback,
+  Keyboard,
 } from "react-native";
-import { TextInput } from "react-native-gesture-handler";
-import { Ionicons } from "@expo/vector-icons";
 import Colors from "../constants/Colors";
 import FontSize from "../constants/FontSize";
 import Spacing from "../constants/Spacing";
@@ -28,6 +28,10 @@ const Register = ({ navigation }) => {
   const handleRegister = async () => {
     if (password !== confirmPassword) {
       Alert.alert("Error", "Passwords do not match");
+      return;
+    }
+    if (!name || !email || !password) {
+      alert("Please fill out all inputs.");
       return;
     }
 
@@ -50,132 +54,164 @@ const Register = ({ navigation }) => {
         console.log("data ", data);
       })
       .catch((err) => {
-        alert(err.message);
+        let errorMessage = "An error occurred. Please try again.";
+        switch (err.code) {
+          case "auth/weak-password":
+            errorMessage = "Password should be at least 6 characters.";
+            break;
+          case "auth/email-already-in-use":
+            errorMessage = "The email address is already in use.";
+            break;
+          case "auth/invalid-email":
+            errorMessage = "The email address is invalid.";
+            break;
+          default:
+            break;
+        }
+        Alert.alert("Error", errorMessage);
       });
   };
-  const handleHaveAccount = async () => {
-    navigation.navigate("LoginScreen")
+
+  React.useLayoutEffect(() => {
+    navigation.setOptions({
+      headerTitleStyle: { color: "#282534" },
+      headerTintColor: "#282534",
+    });
+  }, [navigation]);
+
+  const dismissKeyboard = () => {
+    Keyboard.dismiss();
   };
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: Colors.white }}>
-      <StatusBar backgroundColor={Colors.white} />
-      <View style={{ padding: Spacing * 2 }}>
-        <View style={{ alignItems: "center" }}>
-          <Text
-            style={{
-              fontSize: FontSize.xLarge,
-              color: Colors.primary,
-              fontWeight: "bold",
-              marginVertical: Spacing * 2,
-            }}
+    <TouchableWithoutFeedback onPress={dismissKeyboard}>
+      <SafeAreaView style={styles.container}>
+        <StatusBar backgroundColor={Colors.white} />
+        <View style={styles.contentContainer}>
+          <View style={styles.headingContainer}>
+            <Text style={styles.headingText}>Create an account</Text>
+            <Text style={styles.subheadingText}>
+              Let's start our journey together!
+            </Text>
+          </View>
+          <View style={styles.inputContainer}>
+            <AppTextInput
+              placeholder="Name"
+              value={name}
+              onChangeText={setName}
+            />
+            <AppTextInput
+              placeholder="Email"
+              value={email}
+              onChangeText={setEmail}
+            />
+            <AppTextInput
+              placeholder="Password"
+              value={password}
+              onChangeText={setPassword}
+              secureTextEntry
+            />
+            <AppTextInput
+              placeholder="Confirm Password"
+              value={confirmPassword}
+              onChangeText={setConfirmPassword}
+              secureTextEntry
+            />
+          </View>
+          <TouchableOpacity
+            style={styles.registerButton}
+            onPress={handleRegister}
           >
-            Create an account
+            <Text style={styles.registerButtonText}>Register</Text>
+          </TouchableOpacity>
+          <View style={styles.haveAccountContainer}>
+            <Text style={styles.plainText}>
+              Already have an account?{" "}
+              <Text
+                style={styles.clickableText}
+                onPress={() => navigation.navigate("LoginScreen")}
+              >
+                Log in
+              </Text>
+            </Text>
+          </View>
+          <Text style={styles.privacyText}>
+            By signing up, you agree to our{" "}
+            <Text style={styles.privacyLink}>Privacy Policy</Text> and{" "}
+            <Text style={styles.privacyLink}>Terms and Conditions</Text>.
           </Text>
-          <Text
-            style={{
-              fontSize: FontSize.small,
-              maxWidth: "80%",
-              textAlign: "center",
-            }}
-          >
-            Let’s start our journey together!
-          </Text>
+          <View style={styles.spacing} />
         </View>
-        <View style={{ marginVertical: Spacing * 3 }}>
-        <AppTextInput
-            placeholder="Name"
-            value={name}
-            onChangeText={(text) => setName(text)}
-          />
-          
-          <AppTextInput
-            placeholder="Email"
-            value={email}
-            onChangeText={(text) => setEmail(text)}
-          />
-
-          <AppTextInput
-            placeholder="Password"
-            value={password}
-            onChangeText={setPassword}
-            secureTextEntry
-          ></AppTextInput>
-          <AppTextInput
-            placeholder="Confirm Password"
-            value={confirmPassword}
-            onChangeText={setConfirmPassword}
-            secureTextEntry
-          ></AppTextInput>
-        </View>
-
-        <TouchableOpacity
-          style={{
-            padding: Spacing * 2,
-            backgroundColor: Colors.primary,
-            marginVertical: Spacing * 2,
-            borderRadius: Spacing,
-            shadowColor: Colors.primary,
-            shadowOffset: {
-              width: 0,
-              height: Spacing,
-            },
-            shadowOpacity: 0.1,
-            shadowRadius: Spacing,
-          }}
-          onPress={handleRegister}
-        >
-          <Text
-            style={{
-              color: Colors.onPrimary,
-              textAlign: "center",
-              fontSize: FontSize.large,
-            }}
-          >
-            Register
-          </Text>
-        </TouchableOpacity>
-        <View style={styles.container}>
-        <TouchableOpacity
-          style={styles.button}
-          onPress={handleHaveAccount}
-        >
-          <Text style={styles.buttonText}>
-            Already have an account?
-          </Text>
-        </TouchableOpacity>
-        </View>
-        <View
-          style={{
-            marginVertical: Spacing ,
-          }}
-        ></View>
-      </View>
-    </SafeAreaView>
+      </SafeAreaView>
+    </TouchableWithoutFeedback>
   );
 };
 
 const styles = StyleSheet.create({
-  button: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: 'transparent',
-    borderRadius: 5,
-    borderWidth: 1,
-    borderColor: Colors.primary, // Adjust the color to your preference
-    paddingVertical: 10,
-    paddingHorizontal: 20,
-  },
-  buttonText: {
-    color: Colors.primary, // Adjust the color to your preference
-    fontSize: 16,
-    fontWeight: 'bold',
-    textAlign: 'center',
-  },
   container: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginVertical: Spacing*2,
+    flex: 1,
+    backgroundColor: Colors.white,
+  },
+  contentContainer: {
+    padding: Spacing * 2,
+  },
+  headingContainer: {
+    alignItems: "center",
+  },
+  headingText: {
+    fontSize: FontSize.xLarge,
+    color: Colors.primary,
+    fontWeight: "bold",
+    marginVertical: Spacing / 2,
+  },
+  subheadingText: {
+    fontSize: FontSize.small,
+    maxWidth: "80%",
+    textAlign: "center",
+  },
+  inputContainer: {
+    marginVertical: Spacing * 2,
+  },
+  registerButton: {
+    padding: Spacing * 2,
+    backgroundColor: Colors.primary,
+    marginVertical: Spacing / 2,
+    borderRadius: Spacing,
+    shadowColor: Colors.primary,
+    shadowOffset: {
+      width: 0,
+      height: Spacing,
+    },
+    shadowOpacity: 0.1,
+    shadowRadius: Spacing,
+  },
+  registerButtonText: {
+    color: Colors.onPrimary,
+    textAlign: "center",
+    fontSize: FontSize.large,
+  },
+  haveAccountContainer: {
+    justifyContent: "center",
+    alignItems: "center",
+    marginVertical: Spacing,
+  },
+  privacyText: {
+    color: Colors.black,
+    textAlign: "center",
+    fontSize: FontSize.small,
+  },
+  privacyLink: {
+    color: Colors.primary,
+    textDecorationLine: "underline",
+  },
+  plainText: {
+    color: Colors.black,
+    textAlign: "center",
+    fontSize: FontSize.small,
+  },
+  clickableText: {
+    color: Colors.primary,
+    textDecorationLine: "underline",
   },
 });
 

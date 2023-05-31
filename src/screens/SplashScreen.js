@@ -1,15 +1,14 @@
-import { View, Text, StyleSheet, Image } from "react-native";
-import React, { useEffect, useState } from "react";
-import Typewriter from "react-native-typewriter";
-import Colors from "../constants/Colors";
+import { View, StyleSheet, Animated } from "react-native";
+import React, { useEffect, useState, useRef } from "react";
 
 const SplashScreen = (props) => {
   const [authLoaded, setAuthLoaded] = useState(false);
+  const fadeAnim = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
     setTimeout(() => {
       setAuthLoaded(true);
-    }, 5000);
+    }, 6000);
   }, []);
 
   useEffect(() => {
@@ -18,13 +17,24 @@ const SplashScreen = (props) => {
     }
   }, [authLoaded, props.navigation]);
 
+  useEffect(() => {
+    Animated.timing(fadeAnim, {
+      toValue: 1,
+      duration: 2000,
+      useNativeDriver: true,
+    }).start();
+  }, [fadeAnim]);
+
   return (
     <View style={styles.container}>
-      <Image source={require("../../assets/logo.png")} style={styles.splash} />
+     <Animated.Image
+        source={require("../images/brainylogo.gif")}
+        style={[styles.splash, { opacity: fadeAnim }]}
+      /> 
       <View style={styles.textContainer}>
-        <Typewriter style={styles.appName} typing={1} maxDelay={300}>
-          <Text>Brainy</Text>
-        </Typewriter>
+        <Animated.Text style={[styles.appName, { opacity: fadeAnim }]}>
+          brainy
+        </Animated.Text>
       </View>
     </View>
   );
@@ -35,24 +45,28 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
+    backgroundColor: 'white',
   },
   contentContainer: {
     alignItems: "center",
   },
   splash: {
-    width: 250,
-    height: 250,
+    width: 150,
+    height: 150,
   },
   textContainer: {
-    marginTop: 10,
+    marginTop: 15,
     alignItems: "center",
   },
   appName: {
-    color: Colors.primary,
-    fontSize: 35,
+    color: "#282828",
+    fontSize: 30,
     fontWeight: "bold",
-    textTransform: "uppercase",
-    marginTop: 10, 
+  },
+  slogan: {
+    fontSize: 16,
+    color: "#999999",
+    marginTop: 10,
   },
 });
 
