@@ -13,13 +13,14 @@ import {
 import Colors from "../constants/Colors";
 import FontSize from "../constants/FontSize";
 import Spacing from "../constants/Spacing";
+import { TransitionPresets } from "@react-navigation/stack";
 
 const { width, height } = Dimensions.get("window");
 
 const slides = [
   {
     id: "1",
-    image: require("../images/image1.png"),
+    image: require("../images/image11.png"),
     title: "A safe space \n to share and heal",
     subtitle: "Your mental health journey begins here.",
   },
@@ -31,7 +32,7 @@ const slides = [
   },
   {
     id: "3",
-    image: require("../images/image3.png"),
+    image: require("../images/image3.jpg"),
     title: "A healthy mind \n is an asset",
     subtitle: "Chat your way to a better you!",
   },
@@ -119,7 +120,7 @@ const OnboardingScreen = ({ navigation }) => {
                 <Text
                   style={{
                     color: Colors.onPrimary,
-                    fontWeight: 'bold',
+                    fontWeight: "bold",
                     textAlign: "center",
                     fontSize: FontSize.medium,
                   }}
@@ -233,11 +234,6 @@ const styles = StyleSheet.create({
     marginVertical: Spacing * 3,
     borderRadius: Spacing,
     shadowColor: Colors.primary,
-    shadowOffset: {
-      width: 0,
-      height: Spacing,
-    },
-    shadowOpacity: 0.1,
     shadowRadius: Spacing,
   },
   getstartedBtn: {

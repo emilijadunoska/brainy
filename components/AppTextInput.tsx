@@ -19,7 +19,7 @@ const AppTextInput: React.FC<TextInputProps> = ({ ...otherProps }) => {
       placeholderTextColor={Colors.darkText}
       style={[
         {
-          fontSize: FontSize.medium,
+          fontSize: FontSize.small,
           padding: Spacing * 2,
           backgroundColor: Colors.lightPrimary,
           borderRadius: Spacing,
@@ -27,6 +27,7 @@ const AppTextInput: React.FC<TextInputProps> = ({ ...otherProps }) => {
         },
         focused && {
           borderWidth: 2,
+          borderRadius: Spacing*2,
           borderColor: Colors.primary,
           shadowOffset: { width: 4, height: Spacing },
           shadowColor: Colors.primary,

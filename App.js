@@ -1,5 +1,4 @@
 import "react-native-gesture-handler";
-import { Image } from "react-native";
 import React from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import {
@@ -59,13 +58,13 @@ const App = () => {
               open: {
                 animation: "timing",
                 config: {
-                  duration: 500, // Increase the duration for a slower animation
+                  duration: 700, // Increase the duration for a slower animation
                 },
               },
               close: {
                 animation: "timing",
                 config: {
-                  duration: 500, // Increase the duration for a slower animation
+                  duration: 700, // Increase the duration for a slower animation
                 },
               },
             },
@@ -76,6 +75,7 @@ const App = () => {
             component={SplashScreen}
             options={{ headerShown: false }}
           />
+          
           {isAppFirstLaunched && (
             <Stack.Screen
               name="OnboardingScreen"
