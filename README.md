@@ -10,7 +10,7 @@
 
 ## Opis
 
-Mobilna aplikacija Brainy je zasnovana za zagotavljanje uporabnikom platformo za klepet, kjer se lahko pogovarjajo z ChatGPT, umetno inteligenco, ki deluje kot terapevt za duševno zdravje. Uporabniki lahko v varnem in zaupnem okolju delijo svoje misli, občutke in skrbi s klepetalnikom. Aplikacija omogoča funkcionalnosti, kot so uporabniški profili, povzetki zgodovine klepetov, personalizirani pozdravi ter opomniki, ki spodbujajo redno uporabo aplikacije.
+Brainy je aplikacija, ki deluje kot svetovalec za duševno zdravje. Ponuja online-chat terapevt, ki temelji na tehnologije chatGPT, katerega namen je izboljšati duševno počutje uporabnika z vsakodnevnimi pogovori in vprašanji. Deluje kot dnevni dnevnik za uporabnike, ki želijo zapisati svoja čustva in misli skozi dan. Poleg tega si zapomni uporabnikove pogovore za prihodnjo uporabo in spremljanje. S Brainy, uporabnik se lahko pogovori o svojih težavah, postavlja vprašanja in dobi priporočila za vaje za duševno zdravje in dobro počutje.
 
 ## Funkcionalnosti
 
@@ -29,7 +29,13 @@ Za namestitev in zagon aplikacije lokalno sledite tem korakom:
 1. Klonirajte repozitorij na svoj računalnik:
 2. Poiščite mapo projekta.
 3. Namestite odvisnosti (node modules).
-4. Poženite aplikacijo:
+```javascript
+npm install
+```
+5. Poženite aplikacijo
+```javascript
+npm start
+```
 
 ## Uporaba
 
