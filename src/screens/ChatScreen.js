@@ -13,6 +13,7 @@ import {
 import logo from "../images/logo-white.png";
 
 
+
 export default function ChatScreen({ navigation }) {
   const [messages, setMessages] = useState([]);
   const [userData, setUserData] = useState(null);
@@ -22,9 +23,15 @@ export default function ChatScreen({ navigation }) {
 
   const apiKey = "";
   const apiURL = "https://api.openai.com/v1/chat/completions";
- 
+  const apiYoutube = "";
+
+
   const appState = useRef(AppState.currentState);
   const [appStateVisible, setAppStateVisible] = useState(appState.currentState);
+  const [videoDetails, setVideoDetails] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
+
+  const videoIds = ['Kvoq4luIYVc', 'StLUjMxHZZE', 'dJxnU9sOh6Q', '3xR8ZKVALwo', 'iyIxRIWl5SI', 'YAzTIOy0ID0'];
 
   useEffect(() => {
     const unKeyboardDidShow = AppState.addEventListener(
@@ -37,6 +44,23 @@ export default function ChatScreen({ navigation }) {
     };
   }, []);
 
+
+  const fetchYoutubeVideoDetails = async (videoIds) => {
+    setIsLoading(true); // Set loading state on when fetching data
+    const api = apiYoutube;
+    const url = `https://www.googleapis.com/youtube/v3/videos?id=${videoIds.join(',')}&key=${api}&part=snippet,contentDetails,statistics,status`;
+
+    try {
+      const res = await fetch(url);
+      const data = await res.json();
+      setVideoDetails(data.items); // Store the fetched video details in the state
+      setIsLoading(false); // Set loading state off when data is fetched
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
+
+
   const fetchUserData = () => {
     // Function to fetch user data
     const user = auth.currentUser;
@@ -47,19 +71,45 @@ export default function ChatScreen({ navigation }) {
         const data = snapshot.val();
         setUserData(data);
         greetingMessage(data); // Pass user data to the greetingMessage function
+        fetchYoutubeVideoDetails(videoIds);
+      }, (errorObject) => {
+        console.log("The read failed: " + errorObject.name);
       });
     }
   };
 
+
   const greetingMessage = async (summary) => {
-    
-    if (summary.lastConversationSummary!= null) {
+
+    if (summary.lastConversationSummary != null) {
       console.log("Summary:" + summary.lastConversationSummary);
-      const prompt = `You are acting like psychologist/terapist and you try to help our users with their mental health problems. After every conversation you make a summary and save it but users don't know about that, we only use it to help them and have evidence of their situation so don't talk about past messages. Can you please create a greeting for user that comes back to our app and has the following summary : ${summary.lastConversationSummary}?`;
+      //  const prompt = `You are acting like psychologist/terapist and you try to help our users with their mental health problems. After every conversation you make a summary and save it but users don't know about that, we only use it to help them and have evidence of their situation so don't talk about past messages. Can you please create a greeting for user that comes back to our app and has the following summary : ${summary.lastConversationSummary}?`;
+
+      const prompt = `You are a highly empathetic and professional psychologist/terapist. Your primary role is to help users manage their emotions, stress, 
+      and mental health issues. You are adept at asking insightful and thought-provoking questions to encourage users to explore 
+      their feelings and behaviors. Help them and provide them solution for their problems. While you should provide specific and scientifically sound advice, always remind the user that 
+      the advice is based on artificial intelligence, and recommend they consult a human professional for personal advice.  Be cerfull the answers to not be more short and clear.
+      After every conversation you make a summary and save it but users don't know about that, we only use it to help them and have evidence of their situation so don't talk about past messages. Can you please create a greeting 
+      for user that comes back to our app and has the following summary : ${summary.lastConversationSummary}?`;
 
       const apiRequestBody = {
         model: "gpt-3.5-turbo",
-        messages: [{ role: "system", content: prompt }],
+        messages: [
+          {
+            "role": "system", "content": `You are a highly empathetic and professional psychologist/terapist. Your primary role is to help users manage their emotions, stress, 
+        and mental health issues. You are adept at asking insightful and thought-provoking questions to encourage users to explore 
+        their feelings and behaviors. Help them and provide them solution for their problems. Also suggest some great resources for yoga, fitness, relaxation, and motivation. Please let them know that you have resources also appropriate to the user's need.`
+          },
+          {
+            "role": "system",
+            "content": `Here are some potential resources you can offer to the user. Please recommend these resources as appropriate to the user's needs. Yoga exercises: Search 'Yoga with Adriene' this channel: https://www.youtube.com/@yogawithadriene,'Yoga with Kassandra' this channel : https://www.youtube.com/@yogawithkassandra or 'Yoga with MadyMorris ' this channel: https://www.youtube.com/@madymorrison . For general fitness: Search 'FitnessBlender on YouTube' this channel: https://www.youtube.com/@FitnessBlender , 'Fitness with MadyMorris ' this channel: https://www.youtube.com/@madymorrison , 'Fitness with Growingannanas'this channel : https://www.youtube.com/watch?v=szXJSRb3tiY or 'Fitness with Juice and Toya' this channel : https://www.youtube.com/@JuiceandToya  on YouTube.  For mindfulness and relaxation: Search 'Music for relaxation' this channel: https://www.youtube.com/watch?v=iyIxRIWl5SI&pp=ygUabWluZGZ1bG5lc3MgYW5kIHJlbGF4YXRpb24%3D , 'Meditation' this channel: https://www.youtube.com/@GreatMeditation or "DrJulie Feeling better" this channel: https://www.youtube.com/@DrJulie on YouTube. For motivation: Search 'Tedex talks ' this channel: https://www.youtube.com/@TEDx ,'Motivation talks' this channel: https://www.youtube.com/@MotivationHubOfficial ,'Motivation talks' this channel: https://www.youtube.com/@MulliganBrothers , "HuberManLab - Scientiic an motivation podcast" this channel: https://www.youtube.com/@hubermanlab/featured, 'Meaning of life' this channel: https://www.youtube.com/@drgabormate9132 on YouTube. `
+          },
+          {
+            "role": "system",
+            "content": `After every conversation you make a summary and save it but users don't know about that, we only use it to help them and have evidence of their situation so don't talk about past messages. Can you please create a greeting 
+            for user that comes back to our app and has the following summary : ${summary.lastConversationSummary}?`
+          }
+        ],
         max_tokens: 512,
         temperature: 0.5,
       };
@@ -101,16 +151,53 @@ export default function ChatScreen({ navigation }) {
   }, []);
 
   const callApi = async (value) => {
-    const prompt = `Act like a psychologist/therapist and try to help the user with their mental health problems.\n\nUser: ${value}`;
+
+    const includeVideoInfo = !isLoading && Math.random() < 0.5; // 30% chance to include video info
+
+    let videoInfo = "";
+    if (isLoading) {
+      videoInfo = "Loading video details...";
+    } else if (videoDetails !== null && includeVideoInfo) { // includeVideoInfo check added
+      const randomVideoIndex = Math.floor(Math.random() * videoDetails.length);
+      const video = videoDetails[randomVideoIndex];
+      videoInfo = `One video you might find interesting is '${video.snippet.title}' on the channel '${video.snippet.channelTitle}'. Here's the link: https://www.youtube.com/watch?v=${video.id}.`;
+    } else {
+      videoInfo = "No video details available.";
+    }
+
+    // Modify prompt based on whether videoInfo should be included
+    const prompt = `You are a highly empathetic and professional psychologist/terapist. Your primary role is to help users manage their emotions, stress, 
+  and mental health issues. You are adept at asking insightful and thought-provoking questions to encourage users to explore 
+  their feelings and behaviors. Help them and provide them solution for their problems. While you should provide specific and scientifically sound advice, always remind the user that 
+  the advice is based on artificial intelligence, and recommend they consult a human professional for personal advice. Be cerfull the answers to not be more short and clear. \n\n${includeVideoInfo ? "Some resources: " + videoInfo : ""
+      }\n\nUser: ${value}`;
 
     const apiRequestBody = {
       model: "gpt-3.5-turbo",
       messages: [
-        { role: "system", content: prompt },
+        {
+          role: "system", "content": `You are a highly empathetic and professional psychologist/terapist. Your primary role is to help users manage their emotions, stress, 
+      and mental health issues. You are adept at asking insightful and thought-provoking questions to encourage users to explore 
+      their feelings and behaviors. Help them and provide them solution for their problems. Also suggest some great resources for yoga, fitness, relaxation, and motivation. Please let them know that you have resources also appropriate to the user's need.  \n\n${includeVideoInfo ? "Some resources: " + videoInfo : ""
+            }\n\nUser: ${value}`
+        },
+        {
+          "role": "system",
+          "content": `Here are some potential resources you can offer to the user. Please recommend these resources as appropriate to the user's needs. Yoga exercises: Search 'Yoga with Adriene' this channel: https://www.youtube.com/@yogawithadriene,'Yoga with Kassandra' this channel : https://www.youtube.com/@yogawithkassandra or 'Yoga with MadyMorris ' this channel: https://www.youtube.com/@madymorrison . For general fitness: Search 'FitnessBlender on YouTube' this channel: https://www.youtube.com/@FitnessBlender , 'Fitness with MadyMorris ' this channel: https://www.youtube.com/@madymorrison , 'Fitness with Growingannanas'this channel : https://www.youtube.com/watch?v=szXJSRb3tiY or 'Fitness with Juice and Toya' this channel : https://www.youtube.com/@JuiceandToya  on YouTube.  For mindfulness and relaxation: Search 'Music for relaxation' this channel: https://www.youtube.com/watch?v=iyIxRIWl5SI&pp=ygUabWluZGZ1bG5lc3MgYW5kIHJlbGF4YXRpb24%3D , 'Meditation' this channel: https://www.youtube.com/@GreatMeditation or "DrJulie Feeling better" this channel: https://www.youtube.com/@DrJulie on YouTube. For motivation: Search 'Tedex talks ' this channel: https://www.youtube.com/@TEDx ,'Motivation talks' this channel: https://www.youtube.com/@MotivationHubOfficial ,'Motivation talks' this channel: https://www.youtube.com/@MulliganBrothers , "HuberManLab - Scientiic an motivation podcast" this channel: https://www.youtube.com/@hubermanlab/featured, 'Meaning of life' this channel: https://www.youtube.com/@drgabormate9132 on YouTube. `
+        },
+        {
+          "role": "system",
+          "content": `Here are some potential resources you can offer to the user: \
+        Yoga exercises: Search 'Yoga with Adriene' this channel: https://www.youtube.com/@yogawithadriene,'Yoga with Kassandra' this channel : https://www.youtube.com/@yogawithkassandra or 'Yoga with MadyMorris ' this channel: https://www.youtube.com/@madymorrison . \
+        For general fitness: Search 'FitnessBlender on YouTube' this channel: https://www.youtube.com/@FitnessBlender , 'Fitness with MadyMorris ' this channel: https://www.youtube.com/@madymorrison , 'Fitness with Growingannanas'this channel : https://www.youtube.com/watch?v=szXJSRb3tiY or 'Fitness with Juice and Toya' this channel : https://www.youtube.com/@JuiceandToya  on YouTube. \
+        For mindfulness and relaxation: Search 'Music for relaxation' this channel: https://www.youtube.com/watch?v=iyIxRIWl5SI&pp=ygUabWluZGZ1bG5lc3MgYW5kIHJlbGF4YXRpb24%3D , 'Meditation' this channel: https://www.youtube.com/@GreatMeditation or 'DrJulie Feeling better' this channel: https://www.youtube.com/@DrJulie on YouTube. \
+        For motivation: Search 'Tedex talks ' this channel: https://www.youtube.com/@TEDx ,'Motivation talks' this channel: https://www.youtube.com/@MotivationHubOfficial ,'Motivation talks' this channel: https://www.youtube.com/@MulliganBrothers , 'HuberManLab - Scientiic an motivation podcast'this channel: https://www.youtube.com/@hubermanlab/featured, 'Meaning of life' this channel: https://www.youtube.com/@drgabormate9132 on YouTube. \
+        \n\n User: ${value}`
+        },
         { role: "user", content: value },
       ],
       max_tokens: 1024,
-      temperature: 0,
+      temperature: 0.5,
     };
 
     try {
@@ -156,6 +243,8 @@ export default function ChatScreen({ navigation }) {
     });
   };
 
+
+
   //Detect when the application went in background
   const handleAppStateChange = (nextAppState) => {
     if (
@@ -177,15 +266,16 @@ export default function ChatScreen({ navigation }) {
     console.log("Appstate:", appState.current);
   };
 
+
   const summarizeConversation = async () => {
     const conversation = messagesRef.current
       .map((message) => `${message.user.name}: ${message.text}`)
       .join("\n");
-    const prompt = `Summarize the following conversation: \n${conversation}`;
+    const prompt = `You are an expertise in understanding and summarizing conversations. Your task is to extract the main points, emotions and possible actionable items from the following conversation, and summarize it in a concise and comprehensive manner .Be cerfull to not be so log. Here is the conversation you need to summarize: \n${conversation}`;
 
     const apiRequestBody = {
       model: "gpt-3.5-turbo",
-      messages: [{ role: "system", content: prompt }],
+      messages: [{ role: "system", content: prompt },],
       max_tokens: 500,
       temperature: 0.7,
     };
