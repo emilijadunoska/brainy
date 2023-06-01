@@ -44,6 +44,7 @@ const SettingsScreen = ({ navigation }) => {
     const user = auth.currentUser;
 
     if (user) {
+      console.log(user.toString()); 
       auth
         .signOut()
         .then(() => {
@@ -111,11 +112,6 @@ const SettingsScreen = ({ navigation }) => {
       console.log("No user is signed in.");
     }
   };
-  
-
-  
-  
-
 
 React.useLayoutEffect(() => {
   navigation.setOptions({
