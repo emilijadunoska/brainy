@@ -17,6 +17,8 @@ import logo from "../images/logo-white.png";
 export default function ChatScreen({ navigation }) {
   const [messages, setMessages] = useState([]);
   const [userData, setUserData] = useState(null);
+  const [name, setName] = useState('');
+
   const { bottom } = useSafeAreaInsets();
 
   const messagesRef = useRef([]);
@@ -69,6 +71,7 @@ export default function ChatScreen({ navigation }) {
       const userRef = ref(db, `users/${user.uid}`);
       onValue(userRef, (snapshot) => {
         const data = snapshot.val();
+        setName(data.name);
         setUserData(data);
         greetingMessage(data); // Pass user data to the greetingMessage function
         fetchYoutubeVideoDetails(videoIds);
@@ -143,12 +146,16 @@ export default function ChatScreen({ navigation }) {
   };
 
   const onSend = useCallback((message = []) => {
+
     setMessages((previousMessages) =>
       GiftedChat.append(previousMessages, message)
     );
     const value = message[0]?.text;
     callApi(value);
-  }, []);
+  }, []); 
+
+
+
 
   const callApi = async (value) => {
 
@@ -224,6 +231,8 @@ export default function ChatScreen({ navigation }) {
     } catch (error) {
       console.error("API Error:", error);
     }
+
+    
   };
 
   const addNewMessage = (data) => {
@@ -344,6 +353,7 @@ export default function ChatScreen({ navigation }) {
     );
   };
 
+
   return (
     <View style={{ flex: 1, paddingBottom: bottom }}>
       <GiftedChat
@@ -351,11 +361,14 @@ export default function ChatScreen({ navigation }) {
         onSend={onSend}
         user={{
           _id: 1,
+          avatar: `https://ui-avatars.com/api/?background=ffffff&color=282534&length=1&name=${name}`,
         }}
         alwaysShowSend
         scrollToBottom
         renderSend={renderSend}
+        showUserAvatar={true}
       />
+      
     </View>
   );
 }
