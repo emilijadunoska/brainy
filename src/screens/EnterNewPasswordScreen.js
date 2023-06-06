@@ -17,6 +17,7 @@ const EnterNewPassword = ({navigation}) => {
   const [confirmPassword, setConfirmPassword] = useState("");
 
 
+  // Handle the action when a new password is entered
   const handleNewPassword = () => {
     console.log("Password changed! ");
     navigation.navigate('LoginScreen');

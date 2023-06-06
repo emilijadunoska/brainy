@@ -24,6 +24,7 @@ const EditProfileScreen = ({navigation}) => {
     fetchUserData();
   }, []);
 
+    // Fetch user data from the database
   const fetchUserData = () => {
     const user = auth.currentUser;
     if (user) {
@@ -37,6 +38,7 @@ const EditProfileScreen = ({navigation}) => {
     }
   };
 
+  // Get initials from the name
   const getInitials = (name) => {
     const names = name.split(" ");
     const initials = names.map((n) => n.charAt(0).toUpperCase()).join("");
@@ -55,7 +57,8 @@ const EditProfileScreen = ({navigation}) => {
     );
   };
 
-  // Ova e funkcijata za buttonot kokje go sejvnit profilot  
+
+  // Handle submit for saving the profile changes
     const handleSubmit = () => {
       const user = auth.currentUser;
       if (user) {

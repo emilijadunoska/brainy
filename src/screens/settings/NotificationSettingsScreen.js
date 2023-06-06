@@ -14,6 +14,7 @@ const NotificationSettingsScreen = ({ navigation }) => {
   const [toggleValue, setToggleValue] = useState(false);
   const { selectedTime, setReminderTime } = useContext(AppContext);
 
+// Set up the navigation options
   React.useLayoutEffect(() => {
     navigation.setOptions({
       headerTitleStyle: { color: "#282534" },
@@ -21,10 +22,12 @@ const NotificationSettingsScreen = ({ navigation }) => {
     });
   }, [navigation]);
 
+ // Update the toggle value when the selectedTime changes
   useEffect(() => {
     setToggleValue(!!selectedTime);
   }, [selectedTime]);
 
+  // Handle the toggle value change
   const handleToggle = (value) => {
     setToggleValue(value);
     if (!value) {
@@ -35,10 +38,12 @@ const NotificationSettingsScreen = ({ navigation }) => {
     }
   };
 
+  // Handle the navigation to the RemaindersSettings screen
   const handleDailyRemainders = () => {
     navigation.navigate("RemaindersSettings");
   };
 
+  // Set up the navigation options (again)
   React.useLayoutEffect(() => {
     navigation.setOptions({
       headerTitleStyle: { color: "#282534" },

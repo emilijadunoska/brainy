@@ -19,6 +19,8 @@ const ProfileScreen = ({ navigation }) => {
     fetchUserData();
   }, []);
 
+  
+  // Fetch user data from the database
   const fetchUserData = () => {
     const user = auth.currentUser;
     if (user) {
@@ -32,13 +34,14 @@ const ProfileScreen = ({ navigation }) => {
     }
   };
 
-
+  // Get initials from the name
   const getInitials = (name) => {
     const names = name.split(" ");
     const initials = names.map((n) => n.charAt(0).toUpperCase()).join("");
     return initials;
   };
 
+    // Generate avatar based on the name initials
   const generateAvatar = (name) => {
     const initials = getInitials(name);
     const avatarStyle = {
@@ -50,7 +53,7 @@ const ProfileScreen = ({ navigation }) => {
       </View>
     );
   };
-
+  // Handle navigation to the EditProfileScreen
   const handleEditProfile = () => {
     navigation.navigate("EditProfileScreen");
   };

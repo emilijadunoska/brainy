@@ -14,32 +14,40 @@ import { getDatabase, ref, remove } from "firebase/database";
 import { auth } from "../../../firebase";
 import Colors from "../../constants/Colors";
 
+// Define the SettingsScreen component
 const SettingsScreen = ({ navigation }) => {
   const appVersion = Constants.manifest.version;
-
+  
+// Handle the navigation to the ProfileScreen
   const handleProfileSettings = () => {
     navigation.navigate("ProfileScreen");
   };
 
+// Handle the navigation to the NotificationSettingsScreen
   const handleNotifications = () => {
     navigation.navigate("NotificationSettingsScreen");
   };
 
+ // Handle the navigation to the FAQScreen
   const handleFAQ = () => {
     navigation.navigate("FAQScreen");
   };
+
+ // Open the privacy policy URL in the browser
   const handlePrivacyPolicy = () => {
     Linking.openURL(
       "https://www.termsfeed.com/live/2b9d0068-fceb-4695-9556-e8bd2d148655"
     );
   };
 
+// Open the terms and conditions URL in the browser
   const handleTermsAndConditions = () => {
     Linking.openURL(
       "https://www.termsfeed.com/live/cbb3653b-d517-4b31-b790-9f43a3436033"
     );
   };
 
+// Handle the user logout
   const handleLogout = () => {
     const user = auth.currentUser;
 
@@ -59,6 +67,7 @@ const SettingsScreen = ({ navigation }) => {
     }
   };
 
+// Handle the user account deletion
   const handleDeleteAccount = () => {
     Alert.alert(
       "Delete account",
@@ -71,14 +80,14 @@ const SettingsScreen = ({ navigation }) => {
         {
           text: "Yes",
           style: "destructive",
-          onPress: handleConfirmation, // ova e funkcijata kaj so trebit da e logikata za brisenje na akauntot
+          onPress: handleConfirmation, 
         },
       ],
       { cancelable: true }
     );
   };
 
-
+// Handle the confirmation for account deletion
   const handleConfirmation = () => {
     const user = auth.currentUser;
     if (user) {
@@ -86,12 +95,12 @@ const SettingsScreen = ({ navigation }) => {
       const db = getDatabase();
       const userRef = ref(db, `users/${user.uid}`);
   
-      // Delete from  Realtime Database.
+      // Delete the user data from the Realtime Database
       remove(userRef)
         .then(() => {
           console.log("User data deleted from Realtime Database!");
   
-          //  delete the user account.
+          // Delete the user account
           user.delete()
             .then(() => {
               console.log("User account deleted!");
@@ -113,6 +122,7 @@ const SettingsScreen = ({ navigation }) => {
     }
   };
 
+// Set up the navigation options
 React.useLayoutEffect(() => {
   navigation.setOptions({
     headerTitleStyle: { color: "#282534" },
