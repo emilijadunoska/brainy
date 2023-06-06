@@ -15,6 +15,7 @@ import { schedulePushNotification } from "../../BackgroundNotification";
 import * as Notifications from "expo-notifications";
 import { AppContext } from "../../AppContext";
 
+// Set up the notification handler to customize the notification behavior
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
     shouldShowAlert: true,
@@ -23,31 +24,39 @@ Notifications.setNotificationHandler({
   }),
 });
 
+// Define the NotificationsScreen component
 const NotificationsScreen = () => {
   const insets = useSafeAreaInsets();
   const navigation = useNavigation();
 
+  // State variables for controlling the visibility of the date picker
   const [isDatePickerVisible, setDatePickerVisible] = useState(false);
+
+  // Access the selectedTime and setReminderTime functions from the AppContext
   const { selectedTime, setReminderTime } = useContext(AppContext);
 
+   // Show the date picker
   const showDatePicker = () => {
     setDatePickerVisible(true);
   };
 
+  // Hide the date picker
   const hideDatePicker = () => {
     setDatePickerVisible(false);
   };
 
+  // Handle the selection of a date from the date picker
   const handleConfirm = (date) => {
+    // Format the selected time
     const formattedTime = date.toLocaleTimeString([], {
       hour: "numeric",
       minute: "2-digit",
     });
-    setReminderTime(formattedTime);
+    setReminderTime(formattedTime);  // Set the reminder time in the context
     hideDatePicker();
     console.log(date.getMinutes() + "----" + date.getHours());
-    schedulePushNotification(date);
-    navigation.navigate("ConfirmationScreen", { selectedTime: formattedTime });
+    schedulePushNotification(date);   // Schedule the push notification
+    navigation.navigate("ConfirmationScreen", { selectedTime: formattedTime }); // Navigate to the ConfirmationScreen and pass the selectedTime as a parameter
   };
 
   const handleNotNow = () => {

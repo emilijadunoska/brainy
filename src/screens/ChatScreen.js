@@ -12,8 +12,6 @@ import {
 } from "firebase/database";
 import logo from "../images/logo-white.png";
 
-
-
 export default function ChatScreen({ navigation }) {
   const [messages, setMessages] = useState([]);
   const [userData, setUserData] = useState(null);
@@ -23,9 +21,12 @@ export default function ChatScreen({ navigation }) {
 
   const messagesRef = useRef([]);
 
-  const apiKey = "";
+
+ // Fetching environment variables
+  const appEnv = process.env.APP_ENV;
+  const apiKey = process.env.API_KEY;
   const apiURL = "https://api.openai.com/v1/chat/completions";
-  const apiYoutube = "";
+  const apiYoutube = process.env.API_YOUTUBE;
 
 
   const appState = useRef(AppState.currentState);
@@ -46,23 +47,7 @@ export default function ChatScreen({ navigation }) {
     };
   }, []);
 
-
-  const fetchYoutubeVideoDetails = async (videoIds) => {
-    setIsLoading(true); // Set loading state on when fetching data
-    const api = apiYoutube;
-    const url = `https://www.googleapis.com/youtube/v3/videos?id=${videoIds.join(',')}&key=${api}&part=snippet,contentDetails,statistics,status`;
-
-    try {
-      const res = await fetch(url);
-      const data = await res.json();
-      setVideoDetails(data.items); // Store the fetched video details in the state
-      setIsLoading(false); // Set loading state off when data is fetched
-    } catch (error) {
-      console.error("Error:", error);
-    }
-  };
-
-
+// Fetch user data from Firebase
   const fetchUserData = () => {
     // Function to fetch user data
     const user = auth.currentUser;
@@ -81,19 +66,28 @@ export default function ChatScreen({ navigation }) {
     }
   };
 
+  // Fetch YouTube video details
+  const fetchYoutubeVideoDetails = async (videoIds) => {
+    setIsLoading(true); // Set loading state on when fetching data
+    const api = apiYoutube;
+    const url = `https://www.googleapis.com/youtube/v3/videos?id=${videoIds.join(',')}&key=${api}&part=snippet,contentDetails,statistics,status`;
 
+    try {
+      const res = await fetch(url);
+      const data = await res.json();
+      setVideoDetails(data.items); // Store the fetched video details in the state
+      setIsLoading(false); // Set loading state off when data is fetched
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
+
+// Greeting message for the user
   const greetingMessage = async (summary) => {
 
     if (summary.lastConversationSummary != null) {
+       // Greet user based on the last conversation summary
       console.log("Summary:" + summary.lastConversationSummary);
-      //  const prompt = `You are acting like psychologist/terapist and you try to help our users with their mental health problems. After every conversation you make a summary and save it but users don't know about that, we only use it to help them and have evidence of their situation so don't talk about past messages. Can you please create a greeting for user that comes back to our app and has the following summary : ${summary.lastConversationSummary}?`;
-
-      const prompt = `You are a highly empathetic and professional psychologist/terapist. Your primary role is to help users manage their emotions, stress, 
-      and mental health issues. You are adept at asking insightful and thought-provoking questions to encourage users to explore 
-      their feelings and behaviors. Help them and provide them solution for their problems. While you should provide specific and scientifically sound advice, always remind the user that 
-      the advice is based on artificial intelligence, and recommend they consult a human professional for personal advice.  Be cerfull the answers to not be more short and clear.
-      After every conversation you make a summary and save it but users don't know about that, we only use it to help them and have evidence of their situation so don't talk about past messages. Can you please create a greeting 
-      for user that comes back to our app and has the following summary : ${summary.lastConversationSummary}?`;
 
       const apiRequestBody = {
         model: "gpt-3.5-turbo",
@@ -141,10 +135,12 @@ export default function ChatScreen({ navigation }) {
         console.error("API Error:", error);
       }
     } else {
+      // Greet user with a default message if there is no conversation summary
       addNewMessage(`Hello ${summary.name}, how are you today?`);
     }
   };
 
+   // Handle sending messages
   const onSend = useCallback((message = []) => {
 
     setMessages((previousMessages) =>
@@ -152,14 +148,14 @@ export default function ChatScreen({ navigation }) {
     );
     const value = message[0]?.text;
     callApi(value);
-  }, []); 
+  }, []);
 
 
 
-
+  // Call the OpenAI API to get the response
   const callApi = async (value) => {
 
-    const includeVideoInfo = !isLoading && Math.random() < 0.5; // 30% chance to include video info
+    const includeVideoInfo = !isLoading && Math.random() < 0.5; // 50% chance to include video info
 
     let videoInfo = "";
     if (isLoading) {
@@ -172,13 +168,7 @@ export default function ChatScreen({ navigation }) {
       videoInfo = "No video details available.";
     }
 
-    // Modify prompt based on whether videoInfo should be included
-    const prompt = `You are a highly empathetic and professional psychologist/terapist. Your primary role is to help users manage their emotions, stress, 
-  and mental health issues. You are adept at asking insightful and thought-provoking questions to encourage users to explore 
-  their feelings and behaviors. Help them and provide them solution for their problems. While you should provide specific and scientifically sound advice, always remind the user that 
-  the advice is based on artificial intelligence, and recommend they consult a human professional for personal advice. Be cerfull the answers to not be more short and clear. \n\n${includeVideoInfo ? "Some resources: " + videoInfo : ""
-      }\n\nUser: ${value}`;
-
+     
     const apiRequestBody = {
       model: "gpt-3.5-turbo",
       messages: [
@@ -232,9 +222,10 @@ export default function ChatScreen({ navigation }) {
       console.error("API Error:", error);
     }
 
-    
+
   };
 
+    // Add a new message to the conversation
   const addNewMessage = (data) => {
     const newMessage = {
       _id: Math.random().toString(), // Generate a unique ID for the message
@@ -254,7 +245,7 @@ export default function ChatScreen({ navigation }) {
 
 
 
-  //Detect when the application went in background
+  //// Handle app state changes. Detect when the application went in background
   const handleAppStateChange = (nextAppState) => {
     if (
       appState.current.match(/inactive|background/) &&
@@ -275,7 +266,7 @@ export default function ChatScreen({ navigation }) {
     console.log("Appstate:", appState.current);
   };
 
-
+// Summarize the conversation
   const summarizeConversation = async () => {
     const conversation = messagesRef.current
       .map((message) => `${message.user.name}: ${message.text}`)
@@ -317,6 +308,7 @@ export default function ChatScreen({ navigation }) {
     }
   };
 
+   // Save the conversation summary to Firebase
   const saveSummaryToFirebase = (summary) => {
     const user = auth.currentUser;
     console.log(user.toString);
@@ -343,6 +335,7 @@ export default function ChatScreen({ navigation }) {
     });
   }, [navigation]);
 
+  // Custom render for Send button
   const renderSend = (props) => {
     return (
       <Send {...props}>
@@ -353,7 +346,7 @@ export default function ChatScreen({ navigation }) {
     );
   };
 
-
+  // Render the chat screen
   return (
     <View style={{ flex: 1, paddingBottom: bottom }}>
       <GiftedChat
@@ -368,7 +361,7 @@ export default function ChatScreen({ navigation }) {
         renderSend={renderSend}
         showUserAvatar={true}
       />
-      
+
     </View>
   );
 }
