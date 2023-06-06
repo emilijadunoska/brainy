@@ -85,7 +85,7 @@ const NotificationsScreen = () => {
             </TouchableOpacity>
           )}
           <TouchableOpacity onPress={handleNotNow}>
-            <Text style={styles.nextText}>Not now</Text>
+            <Text testID={'notNowButton'} style={styles.nextText}>Not now</Text>
           </TouchableOpacity>
         </View>
         <DateTimePickerModal
