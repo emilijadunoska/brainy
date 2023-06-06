@@ -14,6 +14,8 @@ import { AppContext } from "../../../AppContext";
 import { Ionicons } from "@expo/vector-icons";
 import Toast from "react-native-toast-message";
 
+// Set notification handler configuration
+
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
     shouldShowAlert: true,
@@ -26,14 +28,16 @@ const RemaindersSettings = ({ navigation }) => {
   const [isDatePickerVisible, setDatePickerVisible] = useState(false);
   const { selectedTime, setReminderTime } = useContext(AppContext);
 
+    // Show the date picker modal
   const showDatePicker = () => {
     setDatePickerVisible(true);
   };
-
+  // Hide the date picker modal
   const hideDatePicker = () => {
     setDatePickerVisible(false);
   };
 
+    // Handle the confirmation of the selected date and time
   const handleConfirm = (date) => {
     const formattedTime = date.toLocaleTimeString([], {
       hour: "numeric",
@@ -42,7 +46,8 @@ const RemaindersSettings = ({ navigation }) => {
     setReminderTime(formattedTime);
     hideDatePicker();
     console.log(date.getMinutes() + "----" + date.getHours());
-    schedulePushNotification(date);
+    schedulePushNotification(date); 
+    // Display a success toast message
     Toast.show({
       type: "success", // Type of the toast message (success, error, info)
       text1: "Success!", // Main text of the toast message

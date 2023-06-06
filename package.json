@@ -61,8 +61,12 @@
     "@types/react-native": "^0.71.5",
     "@types/react-native-vector-icons": "^6.4.13",
     "@types/uuid": "^9.0.1",
+<<<<<<< HEAD
     "jest": "^29.5.0",
     "react-test-renderer": "^18.2.0",
+=======
+    "react-native-dotenv": "^3.4.8",
+>>>>>>> 95772a15d67fe95b2172e11d6804301e93f97aea
     "typescript": "^4.9.4"
   },
   "private": true
