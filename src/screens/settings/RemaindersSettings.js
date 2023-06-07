@@ -15,7 +15,6 @@ import { Ionicons } from "@expo/vector-icons";
 import Toast from "react-native-toast-message";
 
 // Set notification handler configuration
-
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
     shouldShowAlert: true,
@@ -55,6 +54,7 @@ const RemaindersSettings = ({ navigation }) => {
     });
   };
 
+  // Perform layout-related side effects before the browser paints
   React.useLayoutEffect(() => {
     navigation.setOptions({
       headerTitleStyle: { color: "#282534" },

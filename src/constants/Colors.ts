@@ -8,7 +8,6 @@ const brown = '#b87642';
 const darkGrey = '#777777'
 
 
-
 export default {
   darkGrey: darkGrey,
   brown: brown,

@@ -31,6 +31,13 @@ const ResetPasswordScreen = ({navigation}) => {
     });
   };
 
+  React.useLayoutEffect(() => {
+    navigation.setOptions({
+      headerTitleStyle: { color: "#282534" },
+      headerTintColor: "#282534",
+    });
+  }, [navigation]);
+
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: Colors.white }}>
       <View style={{ padding: Spacing * 2 }}>

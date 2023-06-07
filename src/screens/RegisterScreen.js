@@ -74,13 +74,15 @@ const Register = ({ navigation }) => {
   };
 
   React.useLayoutEffect(() => {
+    // Use layout effect to set navigation options
     navigation.setOptions({
-      headerTitleStyle: { color: "#282534" },
-      headerTintColor: "#282534",
+      headerTitleStyle: { color: "#282534" }, // Set header title color
+      headerTintColor: "#282534", // Set header tint color
     });
   }, [navigation]);
-
+  
   const dismissKeyboard = () => {
+    // Function to dismiss the keyboard
     Keyboard.dismiss();
   };
 

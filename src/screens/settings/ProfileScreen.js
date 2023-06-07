@@ -58,6 +58,7 @@ const ProfileScreen = ({ navigation }) => {
     navigation.navigate("EditProfileScreen");
   };
 
+  // Perform layout-related side effects before the browser paints
   React.useLayoutEffect(() => {
     navigation.setOptions({
       headerRight: () => (
