@@ -1,5 +1,6 @@
 import * as Notifications from 'expo-notifications';
 
+// Set up the notification handler to customize the notification behavior
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
     shouldShowAlert: true,
@@ -8,6 +9,7 @@ Notifications.setNotificationHandler({
   }),
 });
 
+// Function to schedule a push notification at a specific date and time
 async function schedulePushNotification(date) {
   await Notifications.scheduleNotificationAsync({
     content: {

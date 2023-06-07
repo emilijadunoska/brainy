@@ -9,22 +9,17 @@ import {
 import Colors from "../../constants/Colors";
 import FontSize from "../../constants/FontSize";
 import { auth, database } from "../../../firebase";
-import {
-  getDatabase,
-  ref,
-  onValue,
-  update
-} from "firebase/database";
+import { getDatabase, ref, onValue, update } from "firebase/database";
 
-const EditProfileScreen = ({navigation}) => {
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
-  
+const EditProfileScreen = ({ navigation }) => {
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+
   useEffect(() => {
     fetchUserData();
   }, []);
 
-    // Fetch user data from the database
+  // Fetch user data from the database
   const fetchUserData = () => {
     const user = auth.currentUser;
     if (user) {
@@ -38,13 +33,14 @@ const EditProfileScreen = ({navigation}) => {
     }
   };
 
-  // Get initials from the name
+  // Function to extract initials from a given name
   const getInitials = (name) => {
     const names = name.split(" ");
     const initials = names.map((n) => n.charAt(0).toUpperCase()).join("");
     return initials;
   };
 
+  // Function to generate an avatar component based on the given name
   const generateAvatar = (name) => {
     const initials = getInitials(name);
     const avatarStyle = {
@@ -57,32 +53,30 @@ const EditProfileScreen = ({navigation}) => {
     );
   };
 
-
   // Handle submit for saving the profile changes
-    const handleSubmit = () => {
-      const user = auth.currentUser;
-      if (user) {
-        const db = getDatabase();
-        const userRef = ref(db, `users/${user.uid}`);
-        const updates = {
-          name: name,
-          email: email,
-        };
-    
-        update(userRef, updates)
-          .then(() => {
-            console.log("User data updated successfully");
-            // Update the state to reflect the changes immediately
-            setName(name);
-            setEmail(email);
-            navigation.goBack(); // Navigate back to the previous screen
-          })
-          .catch((error) => {
-            console.log("Error updating user data:", error);
-          });
-      }
-    };
-    
+  const handleSubmit = () => {
+    const user = auth.currentUser;
+    if (user) {
+      const db = getDatabase();
+      const userRef = ref(db, `users/${user.uid}`);
+      const updates = {
+        name: name,
+        email: email,
+      };
+
+      update(userRef, updates)
+        .then(() => {
+          console.log("User data updated successfully");
+          // Update the state to reflect the changes immediately
+          setName(name);
+          setEmail(email);
+          navigation.goBack(); // Navigate back to the previous screen
+        })
+        .catch((error) => {
+          console.log("Error updating user data:", error);
+        });
+    }
+  };
 
   React.useLayoutEffect(() => {
     navigation.setOptions({
@@ -126,7 +120,7 @@ const EditProfileScreen = ({navigation}) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: 'center',
+    alignItems: "center",
   },
   avatarContainer: {
     alignItems: "center",
@@ -173,7 +167,7 @@ const styles = StyleSheet.create({
     fontSize: FontSize.xLarge,
     fontWeight: "bold",
     marginTop: 10,
-  }
+  },
 });
 
 export default EditProfileScreen;
