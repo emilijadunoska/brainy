@@ -1,34 +1,32 @@
-# Projekt - Brainy
+# Brainy
 
-https://github.com/PetrovskiBojan/Brainy/assets/97333344/419a0fc2-e457-4d0e-b48c-0d38b5be5198
+Brainy is an application that functions as a mental health advisor. It offers an online chat therapist based on chatGPT technology, with the aim of enhancing the user's mental well-being through daily conversations and questions. It operates as a daily journal for users who wish to record their emotions and thoughts throughout the day. Additionally, it stores user conversations for future use and tracking. With Brainy, users can discuss their concerns, ask questions, and receive recommendations for mental health exercises and overall well-being.
 
+https://github.com/emilijadunoska/brainy/assets/137066301/7d4f9490-c65f-42d6-8317-92d1d0c9d649
 
-Brainy je aplikacija, ki deluje kot svetovalec za duševno zdravje. Ponuja online-chat terapevt, ki temelji na tehnologije chatGPT, katerega namen je izboljšati duševno počutje uporabnika z vsakodnevnimi pogovori in vprašanji. Deluje kot dnevni dnevnik za uporabnike, ki želijo zapisati svoja čustva in misli skozi dan. Poleg tega si zapomni uporabnikove pogovore za prihodnjo uporabo in spremljanje. S Brainy, uporabnik se lahko pogovori o svojih težavah, postavlja vprašanja in dobi priporočila za vaje za duševno zdravje in dobro počutje.
+## Features
+1. User Authentication: Users can securely create an account and log in to the application.
+2. Chat Interface: The application provides a chat interface where users exchange messages.
+3. Mental Health Therapy: ChatGPT acts as a mental health therapist, providing support, guidance, and resources to users.
+4. User Profiles: Users can create and manage their profiles, including personal information and settings.
+5. Chat History Summary: The application summarizes users' chat history, allowing them to review past conversations.
+6. Personalized Greetings: Based on chat history, the application greets users with personalized messages to create a more inclusive experience.
+7. Reminders: The application sends reminders to encourage users to use the platform and engage in therapeutic conversations.
+8. Prompt Engineering for improved response generation.
 
-## Funkcionalnosti
+## Installation
 
-1. **Avtentikacija uporabnika**: Uporabniki lahko varno ustvarijo račun in se prijavijo v aplikacijo. 
-2. **Klepetalni vmesnik**: Aplikacija ponuja klepetalni vmesnik, kjer uporabniki izmenjujejo sporočila.
-3. **Terapija za duševno zdravje**: ChatGPT deluje kot terapevt za duševno zdravje in nudi podporo, usmerjanje ter vire uporabnikom.
-4. **Uporabniški profili**: Uporabniki lahko ustvarijo in upravljajo svoje profile, vključno z osebnimi podatki in nastavitvami.
-5. **Povzetek zgodovine klepetov**: Aplikacija povzame zgodovino klepetov uporabnikov, kar jim omogoča pregled prejšnjih pogovorov.
-6. **Personalizirani pozdravi**: Na podlagi zgodovine klepetov aplikacija uporabnike pozdravi s personaliziranimi sporočili, da ustvari bolj vključujočo izkušnjo.
-7. **Opomniki**: Aplikacija pošilja opomnike uporabnikom, da jih spomni na uporabo platforme in sodelovanje v terapevtskih pogovorih.
-8. **Prompt Engineering** za izboljšano generiranje odziva. 
+To install and run the application locally, follow these steps:
 
-## Namestitev
-
-Za namestitev in zagon aplikacije lokalno sledite tem korakom:
-
-1. Klonirajte repozitorij na svoj računalnik:
+1. Clone the repository to your computer:
 ```javascript
 git clone https://github.com/PetrovskiBojan/Brainy 
 ```
-2. Poiščite mapo projekta.
+2. Navigate to the project folder.
 ```javascript
 cd brainy
 ```
-3. Namestite zahtevane odvisnosti z uporabo npm ali Yarn:
+3. Install the required dependencies using npm or Yarn:
 ```javascript
 npm install
 ```
@@ -36,43 +34,43 @@ or
 ```javascript
 yarn install
 ```
-5. Poženite aplikacijo
+5. Launch the application:
 ```javascript
 expo start
 ```
-6. Za zagon aplikacije uporabite aplikacijo Expo Client na vaši mobilni napravi ali emulator.
-Za podrobna navodila o nastavitvi Expo in izvajanju aplikacije na različnih platformah je na voljo [dokumentacijo Expo](https://docs.expo.dev/get-started/installation/)
+6. Use the Expo Client app on your mobile device or emulator to run the application.
+For detailed instructions on setting up Expo and running the application on different platforms, refer to the [Expo Documentation](https://docs.expo.dev/get-started/installation/)
 
-## Uporaba
+## Usage
 
-Ko je aplikacija nameščena in deluje, uporabniki lahko sledijo tem korakom za uporabo njenih funkcionalnosti:
+Once the application is installed and running, users can follow these steps to utilize its features:
 
-1. Zaženite aplikacijo na svoji mobilni napravi.
-2. Ustvarite nov račun ali se prijavite s svojimi obstoječimi podatki.
-3. Preden začnete, prilagodite svoje nastavitve obvestil. 
-4. Aplikacija bo uporabnika usmerila na klepetalni vmesnik, v katerem se lahko začne pogovor. 
-5. Posredujte informacije in se pogovarjajte o svojih mislih, občutkih ali skrbeh z klepetalnikom.
-6. Dostopajte do svojega profila, kjer lahko urejate osebne podatke in nastavitve.
-8. Prejmite personalizirane pozdrave od ChatGPT na podlagi zgodovine klepetov.
-9. Prejemajte opomnike, ki vas spodbujajo k uporabi aplikacije in sodelovanju v terapevtskih pogovorih.
+1. Launch the application on your mobile device.
+2. Create a new account or log in with existing credentials.
+3. Customize your notification settings before getting started.
+4. The application will guide the user to the chat interface, where they can begin conversations.
+5. Share information and engage in conversations about thoughts, feelings, or concerns with the chatbot.
+6. Access your profile to edit personal information and settings.
+7. Receive personalized greetings from ChatGPT based on chat history.
+8. Receive reminders to encourage app usage and participation in therapeutic conversations.
 
-## Tehnologije
+## Technologies
 
-Aplikacija Brainy je zgrajena s pomočjo naslednjih tehnologij:
+The Brainy application is built using the following technologies:
 
-- React Native: JavaScript ogrodje za izgradnjo mobilnih aplikacij.
-- Firebase: Celovita platforma za razvoj mobilnih in spletnih aplikacij, ki zagotavlja avtentikacijo in podatkovno bazo.
-- SonarQube: Statična analiza kode.
-- Jira: Orodje za organizacijo in sledenje dela.
+1. React Native: JavaScript framework for building mobile applications.
+2. Firebase: Comprehensive platform for mobile and web app development, providing authentication and a database.
+3. SonarQube: Static code analysis.
+4. Jira: Work organization and tracking tool.
 
-## Avtorji 
+## Authors 
 - Bojan Petrovski (bojan.petrovski@student.um.si)
 - Emilija Dunoska (emilija.dunoska@student.um.si)
 - Tanja Grozdani  (tanja.grozdani@student.um.si)
 
-**Univerza:** [Univerza v Mariboru](https://www.um.si/en/home-page/) </br>
-**Fakulteta:** [Fakulteta za elektrotehniko, računalništvo in informatiko](https://feri.um.si/) </br>
-**Smer:** Informatika in tehnologije komuniciranja </br>
-**Skrbnik:** prof. dr. Sašo Karakatič
+**University:** [University of Maribor](https://www.um.si/en/home-page/) </br>
+**Faculty:** [Faculty of Electrical Engineering and Computer Science](https://feri.um.si/) </br>
+**Program:** Information Systems and Communication Technologies </br>
+**Supervisor:** Prof. Dr. Sašo Karakatič
 
-&copy; 2023 Vse pravice pridržane.
+&copy; 2023 All rights reserved.
