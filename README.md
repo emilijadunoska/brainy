@@ -1,8 +1,8 @@
 # Brainy
 
-Brainy is an application that functions as a mental health advisor. It offers an online chat therapist based on chatGPT technology, with the aim of enhancing the user's mental well-being through daily conversations and questions. It operates as a daily journal for users who wish to record their emotions and thoughts throughout the day. Additionally, it stores user conversations for future use and tracking. With Brainy, users can discuss their concerns, ask questions, and receive recommendations for mental health exercises and overall well-being.
+![Cover](https://github.com/emilijadunoska/brainy/assets/137066301/f69e85d2-6898-4845-923a-c209d85385f2)
 
-https://github.com/emilijadunoska/brainy/assets/137066301/7d4f9490-c65f-42d6-8317-92d1d0c9d649
+![Cover-1](https://github.com/emilijadunoska/brainy/assets/137066301/fbe52697-65d5-4fd0-aaf2-d68611e86644)
 
 ## Features
 1. User Authentication: Users can securely create an account and log in to the application.
