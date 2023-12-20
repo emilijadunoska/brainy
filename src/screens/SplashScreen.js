@@ -6,7 +6,6 @@ const SplashScreen = (props) => {
   const fadeAnim = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
-    // Simulate loading time
     setTimeout(() => {
       setAuthLoaded(true);
     }, 6000);
@@ -14,13 +13,11 @@ const SplashScreen = (props) => {
 
   useEffect(() => {
     if (authLoaded) {
-      // Navigate to the onboarding screen once authentication is loaded
       props.navigation.replace("OnboardingScreen");
     }
   }, [authLoaded, props.navigation]);
 
   useEffect(() => {
-    // Fade in animation for the splash screen
     Animated.timing(fadeAnim, {
       toValue: 1,
       duration: 2000,

@@ -16,7 +16,6 @@ import Spacing from "../constants/Spacing";
 
 const { width, height } = Dimensions.get("window");
 
-// Slides data
 const slides = [
   {
     id: "1",
@@ -38,7 +37,6 @@ const slides = [
   },
 ];
 
-// Slide component
 const Slide = ({ item }) => {
   return (
     <SafeAreaView>
@@ -57,18 +55,15 @@ const Slide = ({ item }) => {
 };
 
 const OnboardingScreen = ({ navigation }) => {
-  // State to keep track of the current slide index
   const [currentSlideIndex, setCurrentSlideIndex] = React.useState(0);
   const ref = React.useRef();
 
-  // Function to update the current slide index based on the scroll position
   const updateCurrentSlideIndex = (e) => {
     const contentOffsetX = e.nativeEvent.contentOffset.x;
     const currentIndex = Math.round(contentOffsetX / width);
     setCurrentSlideIndex(currentIndex);
   };
 
-  // Function to navigate to the next slide
   const goToNextSlide = () => {
     const nextSlideIndex = currentSlideIndex + 1;
     if (nextSlideIndex != slides.length) {
@@ -78,7 +73,6 @@ const OnboardingScreen = ({ navigation }) => {
     }
   };
 
-  // Function to skip to the last slide
   const skip = () => {
     const lastSlideIndex = slides.length - 1;
     const offset = lastSlideIndex * width;
@@ -86,7 +80,6 @@ const OnboardingScreen = ({ navigation }) => {
     setCurrentSlideIndex(lastSlideIndex);
   };
 
-  // Footer component
   const Footer = () => {
     return (
       <View
