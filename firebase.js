@@ -1,27 +1,22 @@
-// Import the functions you need from the SDKs you need
-import firebase from 'firebase/compat/app';
-import 'firebase/compat/auth';
+import firebase from "firebase/compat/app";
+import "firebase/compat/auth";
 import { getDatabase } from "firebase/database";
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
 
-// Your web app's Firebase configuration
-const firebaseConfig ={ 
-  apiKey: "AIzaSyC9lMU-awFwLSJKi_b0LigpeedXsVufhig",
-  authDomain: "brainy-f2914.firebaseapp.com",
-  databaseURL: "https://brainy-f2914-default-rtdb.europe-west1.firebasedatabase.app",
-  projectId: "brainy-f2914",
-  storageBucket: "brainy-f2914.appspot.com",
-  messagingSenderId: "806484873944",
-  appId: "1:806484873944:web:f047e6c5d04c62caa7bdad"
-}
+const firebaseConfig = {
+  apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
+  authDomain: process.env.REACT_APP_FIREBASE_AUTH_DOMAIN,
+  databaseURL: process.env.REACT_APP_FIREBASE_DATABASE_URL,
+  projectId: process.env.REACT_APP_FIREBASE_PROJECT_ID,
+  storageBucket: process.env.REACT_APP_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: process.env.REACT_APP_FIREBASE_MESSAGING_SENDER_ID,
+  appId: process.env.REACT_APP_FIREBASE_APP_ID,
+};
 
-if (firebase.apps.length === 0){
+if (firebase.apps.length === 0) {
   firebase.initializeApp(firebaseConfig);
 }
-// Use these for auth
 
 const auth = firebase.auth();
 const database = getDatabase();
 
-export {auth, database};
+export { auth, database };

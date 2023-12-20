@@ -12,9 +12,6 @@ import Colors from "../constants/Colors";
 import FontSize from "../constants/FontSize";
 import Spacing from "../constants/Spacing";
 
-const { width, height } = Dimensions.get("window");
-
-// WelcomeScreen component
 const WelcomeScreen = ({ navigation }) => {
   return (
     <SafeAreaView style={styles.container}>
@@ -48,7 +45,6 @@ const WelcomeScreen = ({ navigation }) => {
   );
 };
 
-// Styles
 const styles = StyleSheet.create({
   container: {
     flex: 1,

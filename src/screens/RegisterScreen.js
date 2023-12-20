@@ -15,9 +15,8 @@ import Colors from "../constants/Colors";
 import FontSize from "../constants/FontSize";
 import Spacing from "../constants/Spacing";
 import AppTextInput from "../../components/AppTextInput";
-import { auth, database } from "../../firebase";
+import { auth } from "../../firebase";
 import { getDatabase, ref, set } from "firebase/database";
-const { width, height } = Dimensions.get("window");
 
 const Register = ({ navigation }) => {
   const [name, setName] = useState("");
@@ -25,7 +24,6 @@ const Register = ({ navigation }) => {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
 
-// Handle the registration action
   const handleRegister = async () => {
     if (password !== confirmPassword) {
       Alert.alert("Error", "Passwords do not match");
@@ -51,7 +49,6 @@ const Register = ({ navigation }) => {
         navigation.navigate("NotificationsScreen");
       })
       .then((data) => {
-        //success callback
         console.log("data ", data);
       })
       .catch((err) => {
@@ -74,15 +71,13 @@ const Register = ({ navigation }) => {
   };
 
   React.useLayoutEffect(() => {
-    // Use layout effect to set navigation options
     navigation.setOptions({
-      headerTitleStyle: { color: "#282534" }, // Set header title color
-      headerTintColor: "#282534", // Set header tint color
+      headerTitleStyle: { color: "#282534" }, 
+      headerTintColor: "#282534", 
     });
   }, [navigation]);
   
   const dismissKeyboard = () => {
-    // Function to dismiss the keyboard
     Keyboard.dismiss();
   };
 

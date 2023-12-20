@@ -16,8 +16,6 @@ const ResetPasswordScreen = ({navigation}) => {
   const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
 
-  //The handleResetPassword function is called when the user clicks on the reset password button. 
-  //It uses Firebase's sendPasswordResetEmail method to send a password reset email to the provided email address.
   const handleResetPassword = () => {
     auth.sendPasswordResetEmail(email)
     .then(function() {
@@ -108,12 +106,12 @@ const styles = StyleSheet.create({
     backgroundColor: "transparent",
     borderRadius: 5,
     borderWidth: 1,
-    borderColor: Colors.primary, // Adjust the color to your preference
+    borderColor: Colors.primary, 
     paddingVertical: 10,
     paddingHorizontal: 20,
   },
   buttonText: {
-    color: Colors.primary, // Adjust the color to your preference
+    color: Colors.primary, 
     fontSize: 16,
     fontWeight: "bold",
     textAlign: "center",
@@ -129,7 +127,7 @@ const styles = StyleSheet.create({
     backgroundColor: "transparent",
     borderRadius: 5,
     borderWidth: 1,
-    borderColor: Colors.primary, // Adjust the color to your preference
+    borderColor: Colors.primary, 
     paddingVertical: 10,
     paddingHorizontal: 10,
     marginVertical: 10,

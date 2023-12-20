@@ -20,7 +20,6 @@ const Login = ({ navigation }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-// Check if the user is already authenticated, and redirect to the ChatScreen if they are
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged((user) => {
       if (user) {
@@ -30,7 +29,6 @@ const Login = ({ navigation }) => {
     return unsubscribe;
   }, []);
 
-// Handle the login action
   const handleLogin = () => {
     if (!email || !password) {
       alert("Please enter both email and password.");
@@ -55,7 +53,6 @@ const Login = ({ navigation }) => {
       });
   };
 
- // Navigate to the ResetPasswordScreen
   const handleResetPassword = () => {
     navigation.navigate("ResetPasswordScreen");
   };
@@ -67,7 +64,6 @@ const Login = ({ navigation }) => {
     });
   }, [navigation]);
 
-  // Dismiss the keyboard
   const dismissKeyboard = () => {
     Keyboard.dismiss();
   };

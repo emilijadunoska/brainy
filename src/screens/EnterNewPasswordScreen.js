@@ -17,7 +17,6 @@ const EnterNewPassword = ({navigation}) => {
   const [confirmPassword, setConfirmPassword] = useState("");
 
 
-  // Handle the action when a new password is entered
   const handleNewPassword = () => {
     console.log("Password changed! ");
     navigation.navigate('LoginScreen');
@@ -99,12 +98,12 @@ const styles = StyleSheet.create({
     backgroundColor: "transparent",
     borderRadius: 5,
     borderWidth: 1,
-    borderColor: Colors.primary, // Adjust the color to your preference
+    borderColor: Colors.primary, 
     paddingVertical: 10,
     paddingHorizontal: 20,
   },
   buttonText: {
-    color: Colors.primary, // Adjust the color to your preference
+    color: Colors.primary, 
     fontSize: 16,
     fontWeight: "bold",
     textAlign: "center",
@@ -120,7 +119,7 @@ const styles = StyleSheet.create({
     backgroundColor: "transparent",
     borderRadius: 5,
     borderWidth: 1,
-    borderColor: Colors.primary, // Adjust the color to your preference
+    borderColor: Colors.primary, 
     paddingVertical: 10,
     paddingHorizontal: 10,
     marginVertical: 10,

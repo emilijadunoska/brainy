@@ -1,4 +1,4 @@
-import { View, StyleSheet, Dimensions, AppState } from "react-native";
+import { View, AppState } from "react-native";
 import React, { useRef, useState, useEffect, useCallback } from "react";
 import { GiftedChat, Send } from "react-native-gifted-chat";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -16,11 +16,9 @@ export default function ChatScreen({ navigation }) {
 
   const messagesRef = useRef([]);
 
-  // Fetching environment variables
-  const appEnv = process.env.APP_ENV;
-  const apiKey = process.env.API_KEY;
-  const apiURL = "https://api.openai.com/v1/chat/completions";
-  const apiYoutube = process.env.API_YOUTUBE;
+  const OPENAI_KEY = process.env.OPENAI_KEY;
+  const API_URL = "https://api.openai.com/v1/chat/completions";
+  const API_YOUTUBE = process.env.API_YOUTUBE;
 
   const appState = useRef(AppState.currentState);
   const [appStateVisible, setAppStateVisible] = useState(appState.currentState);
@@ -47,9 +45,7 @@ export default function ChatScreen({ navigation }) {
     };
   }, []);
 
-  // Fetch user data from Firebase
   const fetchUserData = () => {
-    // Function to fetch user data
     const user = auth.currentUser;
     if (user) {
       const db = getDatabase();
@@ -60,7 +56,7 @@ export default function ChatScreen({ navigation }) {
           const data = snapshot.val();
           setName(data.name);
           setUserData(data);
-          greetingMessage(data); // Pass user data to the greetingMessage function
+          greetingMessage(data);
           fetchYoutubeVideoDetails(videoIds);
         },
         (errorObject) => {
@@ -70,10 +66,9 @@ export default function ChatScreen({ navigation }) {
     }
   };
 
-  // Fetch YouTube video details
   const fetchYoutubeVideoDetails = async (videoIds) => {
-    setIsLoading(true); // Set loading state on when fetching data
-    const api = apiYoutube;
+    setIsLoading(true);
+    const api = API_YOUTUBE;
     const url = `https://www.googleapis.com/youtube/v3/videos?id=${videoIds.join(
       ","
     )}&key=${api}&part=snippet,contentDetails,statistics,status`;
@@ -81,17 +76,15 @@ export default function ChatScreen({ navigation }) {
     try {
       const res = await fetch(url);
       const data = await res.json();
-      setVideoDetails(data.items); // Store the fetched video details in the state
-      setIsLoading(false); // Set loading state off when data is fetched
+      setVideoDetails(data.items);
+      setIsLoading(false);
     } catch (error) {
       console.error("Error:", error);
     }
   };
 
-  // Greeting message for the user
   const greetingMessage = async (summary) => {
     if (summary.lastConversationSummary != null) {
-      // Greet user based on the last conversation summary
       console.log("Summary:" + summary.lastConversationSummary);
 
       const apiRequestBody = {
@@ -118,17 +111,17 @@ export default function ChatScreen({ navigation }) {
       };
 
       try {
-        const message = await fetch(apiURL, {
+        const message = await fetch(API_URL, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${apiKey}`,
+            Authorization: `Bearer ${OPENAI_KEY}`,
           },
           body: JSON.stringify(apiRequestBody),
         });
 
         const data = await message.json();
-        console.log("API Response:", data); // Log the response to check the structure and content
+        console.log("API Response:", data);
 
         if (
           data.choices &&
@@ -141,14 +134,12 @@ export default function ChatScreen({ navigation }) {
         console.error("API Error:", error);
       }
     } else {
-      // Greet user with a default message if there is no conversation summary
       addNewMessage(
         `Hello ${summary.name}, welcome to Brainy. I am here to help you. How are you today?`
       );
     }
   };
 
-  // Handle sending messages
   const onSend = useCallback((message = []) => {
     setMessages((previousMessages) =>
       GiftedChat.append(previousMessages, message)
@@ -157,15 +148,13 @@ export default function ChatScreen({ navigation }) {
     callApi(value);
   }, []);
 
-  // Call the OpenAI API to get the response
   const callApi = async (value) => {
-    const includeVideoInfo = !isLoading && Math.random() < 0.5; // 50% chance to include video info
+    const includeVideoInfo = !isLoading && Math.random() < 0.5;
 
     let videoInfo = "";
     if (isLoading) {
       videoInfo = "Loading video details...";
     } else if (videoDetails !== null && includeVideoInfo) {
-      // includeVideoInfo check added
       const randomVideoIndex = Math.floor(Math.random() * videoDetails.length);
       const video = videoDetails[randomVideoIndex];
       videoInfo = `One video you might find interesting is '${video.snippet.title}' on the channel '${video.snippet.channelTitle}'. Here's the link: https://www.youtube.com/watch?v=${video.id}.`;
@@ -204,17 +193,17 @@ export default function ChatScreen({ navigation }) {
     };
 
     try {
-      const res = await fetch(apiURL, {
+      const res = await fetch(API_URL, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${apiKey}`,
+          Authorization: `Bearer ${OPENAI_KEY}`,
         },
         body: JSON.stringify(apiRequestBody),
       });
 
       const data = await res.json();
-      console.log("API Response:", data); // Log the response to check the structure and content
+      console.log("API Response:", data);
 
       if (
         data.choices &&
@@ -229,11 +218,9 @@ export default function ChatScreen({ navigation }) {
     }
   };
 
-  // Add a new message to the conversation
   const addNewMessage = (data) => {
     const newMessage = {
-      _id: Math.random().toString(), // Generate a unique ID for the message
-      text: data,
+      _id: Math.random().toString(),
       createdAt: new Date(),
       user: {
         _id: 2,
@@ -247,7 +234,6 @@ export default function ChatScreen({ navigation }) {
     });
   };
 
-  // Handle app state changes. Detect when the application went in background
   const handleAppStateChange = (nextAppState) => {
     if (
       appState.current.match(/inactive|background/) &&
@@ -256,7 +242,7 @@ export default function ChatScreen({ navigation }) {
       console.log("App has come to the foreground!");
     }
     if (nextAppState.match(/inactive|background/)) {
-      const currentBackgroundTime = new Date(); // Store the current timestamp when the app goes into the background
+      const currentBackgroundTime = new Date();
       console.log(
         "App went to background at:",
         currentBackgroundTime.toLocaleTimeString()
@@ -268,7 +254,6 @@ export default function ChatScreen({ navigation }) {
     console.log("Appstate:", appState.current);
   };
 
-  // Summarize the conversation
   const summarizeConversation = async () => {
     const conversation = messagesRef.current
       .map((message) => `${message.user.name}: ${message.text}`)
@@ -283,17 +268,17 @@ export default function ChatScreen({ navigation }) {
     };
 
     try {
-      const res = await fetch(apiURL, {
+      const res = await fetch(API_URL, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${apiKey}`,
+          Authorization: `Bearer ${OPENAI_KEY}`,
         },
         body: JSON.stringify(apiRequestBody),
       });
 
       const data = await res.json();
-      console.log("API Response:", data); // Log the response to check the structure and content
+      console.log("API Response:", data);
 
       if (
         data.choices &&
@@ -310,13 +295,12 @@ export default function ChatScreen({ navigation }) {
     }
   };
 
-  // Save the conversation summary to Firebase
   const saveSummaryToFirebase = (summary) => {
     const user = auth.currentUser;
     console.log(user.toString);
 
     if (user != null) {
-      const userId = user.uid; // Get logged in user's ID
+      const userId = user.uid;
       console.log(userId);
       const db = getDatabase();
       const userRef = ref(db, `users/${userId}`);
@@ -329,16 +313,13 @@ export default function ChatScreen({ navigation }) {
     }
   };
 
-  // Perform layout-related side effects before the browser paints
   React.useLayoutEffect(() => {
     navigation.setOptions({
-      headerTitleStyle: { color: "#282534" }, // Set the color of the header title
-      headerTintColor: "#282534", // Set the color of the header text and icons
-      headerLeft: null, // Hide the header left component
+      headerTitleStyle: { color: "#282534" },
+      headerTintColor: "#282534",
+      headerLeft: null,
     });
-  }, [navigation]); // Re-run the effect when the navigation object changes
-
-  // Custom render for Send button
+  }, [navigation]);
   const renderSend = (props) => {
     return (
       <Send {...props}>
@@ -349,7 +330,6 @@ export default function ChatScreen({ navigation }) {
     );
   };
 
-  // Render the chat screen
   return (
     <View style={{ flex: 1, paddingBottom: bottom }}>
       <GiftedChat
@@ -367,23 +347,3 @@ export default function ChatScreen({ navigation }) {
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  txtView: {
-    borderBottomColor: "#EAEBE8",
-    borderBottomWidth: 0.5,
-    backgroundColor: "fff",
-  },
-  txt: { alignSelf: "flex-end", padding: 10 },
-  chatContainer: {
-    backgroundColor: "#fff",
-    borderBottomColor: "#D3D3D3",
-    borderBottomWidth: 1,
-  },
-  sendButton: {
-    marginLeft: 10,
-  },
-});
